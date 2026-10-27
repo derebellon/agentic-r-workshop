@@ -32,7 +32,8 @@ age, sex, treatment, comorbidities, died).
   `install.packages("gtsummary", repos = "https://cloud.r-project.org")`.
 - For descriptive and comparative tables, use the **make-table** skill.
 - To estimate risk associations, fit a logistic regression
-  (`glm(..., family = binomial)`) and report Odds Ratios with 95% CIs.
+  (`glm(..., family = binomial)`) and present it as a **gtsummary** table with
+  `tbl_regression(model, exponentiate = TRUE)` (Odds Ratios, 95% CIs, p-values).
 - Answer in English, clear and concise, with a short clinical interpretation
   (what an OR > 1 or < 1 means).
 

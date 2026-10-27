@@ -110,6 +110,8 @@ tool_table <- tool(
 # TOOL 3: fit_model  (logistic regression -> Odds Ratios)
 # ============================================================
 fit_model <- function(outcome = "died", predictors = NULL) {
+  ensure_package("gtsummary")
+  suppressPackageStartupMessages(library(gtsummary))
   data <- get_data()
   if (!outcome %in% names(data)) {
     stop("Outcome '", outcome, "' does not exist. Variables: ",
@@ -122,19 +124,28 @@ fit_model <- function(outcome = "died", predictors = NULL) {
   }
   f <- as.formula(paste(outcome, "~", paste(preds, collapse = " + ")))
   m <- glm(f, data = data, family = binomial)
-  or <- exp(cbind(OR = coef(m), confint.default(m)))
-  colnames(or) <- c("OR", "CI2.5", "CI97.5")
-  or <- round(or, 3)
-  text <- knitr::kable(or, format = "pipe") |> paste(collapse = "\n")
-  paste0("Logistic regression: ", deparse(f), "\n(OR > 1 = more risk; OR < 1 = less risk)\n\n", text)
+
+  # Regression table with gtsummary: Odds Ratios + 95% CI + p-values
+  tbl <- tbl_regression(m, exponentiate = TRUE)
+
+  # Save an HTML version (if gt is available)
+  tryCatch({
+    ensure_package("gt")
+    gt::gtsave(as_gt(tbl), "regression_table.html")
+  }, error = function(e) invisible(NULL))
+
+  text <- tbl |> as_tibble() |> knitr::kable(format = "pipe") |> paste(collapse = "\n")
+  paste0("Logistic regression ", deparse(f),
+         " as a gtsummary table (OR > 1 = more risk, OR < 1 = less risk), saved to regression_table.html:\n\n",
+         text)
 }
 
 tool_model <- tool(
   fit_model,
   paste(
-    "Fits a logistic regression (binomial glm) on the loaded dataset and returns the",
-    "Odds Ratios with confidence intervals. Use it to estimate risk associations",
-    "(e.g. which variables are associated with higher or lower mortality)."
+    "Fits a logistic regression (binomial glm) on the loaded dataset and returns a",
+    "gtsummary regression table with Odds Ratios, 95% CIs and p-values. Use it to estimate",
+    "risk associations (e.g. which variables are associated with higher or lower mortality)."
   ),
   arguments = list(
     outcome = type_string("Binary outcome variable (0/1). Defaults to 'died'.", required = FALSE),

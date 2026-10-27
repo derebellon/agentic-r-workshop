@@ -168,12 +168,13 @@ example patient data, just by asking in plain English.
    ```
    Watch it: it calls a tool, builds the table with the `gtsummary` package (installing it
    if needed), and shows you the result. A file `table.html` is also saved in the folder.
-5. Ask it something harder:
+5. Ask it to model risk, as a clean regression table:
    ```r
-   ask("Which variables are associated with higher mortality?")
+   ask("Which variables are associated with higher mortality? Show it as a gtsummary regression table")
    ```
-   It fits a logistic regression and tells you the Odds Ratios (you should see that
-   **comorbidities** and **treatment 2** raise mortality, and **treatment 1** lowers it).
+   It fits a logistic regression and returns a **gtsummary** regression table of Odds Ratios
+   (with 95% CIs and p-values), saved to `regression_table.html`. You should see that
+   **comorbidities** and **treatment 2** raise mortality, and **treatment 1** lowers it.
 
 That's it, you just used an AI agent to do real analysis, all on your own computer.
 
