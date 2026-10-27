@@ -139,6 +139,35 @@ is and make it yours. It has three files:
 | `tools.R` | The R functions the agent can run | **Add your own functions** here |
 | `agent.R` | The engine (the loop). | **Don't touch it.** |
 
+### What's a tool, and why?
+
+A **tool** is how you give the agent *hands* and teach it *your* way of working. Why bother?
+
+- A plain AI model only predicts text, it **can't touch your data or run code**. Tools let it act.
+- When you ask for a table, it runs **real R** instead of **inventing numbers**.
+- It uses **your** libraries and conventions (here `gtsummary` and `glm`), so results are
+  reproducible, not random code.
+
+A tool has **three parts**. The model never sees your code, only the **description**, and
+from it decides *when* to call the function:
+
+```r
+# 1. The FUNCTION, the real R that does the work
+make_table <- function(compare_by = NULL) {
+  gtsummary::tbl_summary(data, by = compare_by) |> gtsummary::add_p()
+}
+
+# 2 + 3. Wrap it with a DESCRIPTION and typed ARGUMENTS
+tool(
+  make_table,
+  "Build a Table 1 with gtsummary. Use compare_by to compare groups.",  # <- what the model reads
+  compare_by = type_string("the variable to compare by")                # <- a typed input
+)
+```
+
+That's the whole trick: write the function, describe it well, register it. See `tools.R` in
+`02-complete-skeleton` for the full, working versions.
+
 To try it:
 1. In RStudio, set the working directory to `01-minimal-skeleton` (as in step 4.2).
 2. In the R console: `source("agent.R")` then `ask("What time is it?")`.
