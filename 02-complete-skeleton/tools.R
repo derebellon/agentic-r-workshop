@@ -38,6 +38,12 @@ get_data <- function() {
 # TOOL 1: load_data
 # ============================================================
 load_data <- function(path = "cohort.csv") {
+  # If data is already loaded, don't reload: that would wipe any changes made in
+  # this session (e.g. a relabel the agent just did). Keep what we have.
+  if (!is.null(.state$data)) {
+    return(paste0("Data is already loaded (", nrow(.state$data), " rows, ",
+                  ncol(.state$data), " variables); keeping any changes already made."))
+  }
   if (!file.exists(path)) {
     for (alt in c(path, file.path("..", "data", basename(path)), basename(path))) {
       if (file.exists(alt)) { path <- alt; break }
@@ -61,7 +67,9 @@ tool_load <- tool(
 # ============================================================
 # TOOL 2: make_table  (Table 1 with gtsummary, add_p when comparing)
 # ============================================================
-make_table <- function(compare_by = NULL) {
+make_table <- function(compare_by = NULL, variable = NULL, predictors = NULL) {
+  # `variable` and `predictors` are accepted but ignored: small models sometimes
+  # invent them. The Table 1 always includes every variable, so we just drop them.
   ensure_package("gtsummary")
   suppressPackageStartupMessages(library(gtsummary))
   data <- get_data()
@@ -86,9 +94,26 @@ make_table <- function(compare_by = NULL) {
     suppressWarnings(gt::gtsave(as_gt(tbl), "table.html"))
   }, error = function(e) invisible(NULL))
 
+  # Save the reproducible R script that produces this table
+  tryCatch({
+    line_tbl <- if (is.null(compare_by) || !nzchar(compare_by))
+      "tbl <- tbl_summary(data)"
+    else
+      paste0("tbl <- tbl_summary(data, by = ", compare_by, ") |> add_p()")
+    writeLines(c(
+      "# Reproducible script for this table (written by the agent's make_table tool)",
+      "library(gtsummary)",
+      'data <- read.csv("cohort.csv", stringsAsFactors = TRUE)',
+      "data$id <- NULL",
+      line_tbl,
+      'gtsummary::as_gt(tbl) |> gt::gtsave("table.html")',
+      "tbl"
+    ), "table.R")
+  }, error = function(e) invisible(NULL))
+
   # Return the table as text so the model can read and interpret it
   text <- suppressWarnings(tbl |> as_tibble() |> knitr::kable(format = "pipe") |> paste(collapse = "\n"))
-  paste0(title, " (saved to table.html):\n\n", text)
+  paste0(title, " (saved to table.html and the script to table.R):\n\n", text)
 }
 
 tool_table <- tool(
@@ -102,7 +127,9 @@ tool_table <- tool(
     compare_by = type_string(
       "Name of the variable to compare by (e.g. 'treatment' or 'died'). Omit for a simple descriptive table.",
       required = FALSE
-    )
+    ),
+    variable   = type_string("Not needed and ignored; the table always includes all variables.", required = FALSE),
+    predictors = type_string("Not needed and ignored.", required = FALSE)
   )
 )
 
@@ -134,10 +161,24 @@ fit_model <- function(outcome = "died", predictors = NULL) {
     suppressWarnings(gt::gtsave(as_gt(tbl), "regression_table.html"))
   }, error = function(e) invisible(NULL))
 
+  # Save the reproducible R script that produces this regression table
+  tryCatch({
+    writeLines(c(
+      "# Reproducible script for this regression table (written by the agent's fit_model tool)",
+      "library(gtsummary)",
+      'data <- read.csv("cohort.csv", stringsAsFactors = TRUE)',
+      "data$id <- NULL",
+      paste0("m <- glm(", deparse(f), ", data = data, family = binomial)"),
+      "tbl <- tbl_regression(m, exponentiate = TRUE)",
+      'gtsummary::as_gt(tbl) |> gt::gtsave("regression_table.html")',
+      "tbl"
+    ), "regression_table.R")
+  }, error = function(e) invisible(NULL))
+
   text <- suppressWarnings(tbl |> as_tibble() |> knitr::kable(format = "pipe") |> paste(collapse = "\n"))
   paste0("Logistic regression ", deparse(f),
-         " as a gtsummary table (OR > 1 = more risk, OR < 1 = less risk), saved to regression_table.html:\n\n",
-         text)
+         " as a gtsummary table (OR > 1 = more risk, OR < 1 = less risk), saved to regression_table.html",
+         " and the script to regression_table.R:\n\n", text)
 }
 
 tool_model <- tool(

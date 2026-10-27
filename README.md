@@ -167,14 +167,20 @@ example patient data, just by asking in plain English.
    ask("Give me Table 1 comparing by treatment, with p-values")
    ```
    Watch it: it calls a tool, builds the table with the `gtsummary` package (installing it
-   if needed), and shows you the result. A file `table.html` is also saved in the folder.
+   if needed), and shows you the result. It also saves the table as `table.html` **and the
+   reproducible R script it ran as `table.R`**.
 5. Ask it to model risk, as a clean regression table:
    ```r
    ask("Which variables are associated with higher mortality? Show it as a gtsummary regression table")
    ```
    It fits a logistic regression and returns a **gtsummary** regression table of Odds Ratios
-   (with 95% CIs and p-values), saved to `regression_table.html`. You should see that
-   **comorbidities** and **treatment 2** raise mortality, and **treatment 1** lowers it.
+   (with 95% CIs and p-values), saved to `regression_table.html` **and as a reproducible
+   script `regression_table.R`**. You should see that **comorbidities** and **treatment 2**
+   raise mortality, and **treatment 1** lowers it.
+
+> **Reproducible by design:** every table the agent makes also leaves behind the exact R
+> script that produced it (`table.R`, `regression_table.R`), so you can open, read, re-run or
+> tweak it yourself.
 
 That's it, you just used an AI agent to do real analysis, all on your own computer.
 

@@ -16,7 +16,8 @@ all on your computer with a free local model.
 
 It builds the Table 1 with `gtsummary` (`table.html`) and fits a logistic regression shown as
 a `gtsummary` regression table (`regression_table.html`), all on your computer with a free
-local model.
+local model. Each table also leaves behind the **reproducible R script** that produced it
+(`table.R`, `regression_table.R`).
 
 The files: `soul.md` (who the agent is) · `tools.R` (its R functions: `load_data`,
 `make_table`, `fit_model`) · `agent.R` (the engine) · `cohort.csv` (the example data). Going
