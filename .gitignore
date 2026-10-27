@@ -1,0 +1,13 @@
+# Artefactos generados por el agente durante el taller
+tabla.html
+**/tabla.html
+03-claude-code/R/
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+
+# macOS
+.DS_Store
