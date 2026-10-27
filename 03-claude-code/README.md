@@ -5,7 +5,19 @@ uses Claude in the cloud. Same idea as folders 01–02, more power out of the bo
 Full guide in the [main README](../README.md#6-the-same-agent-with-claude-code--folder-03).
 
 **Run it:**
-1. Install Claude Code: https://claude.com/claude-code (you'll need a Claude account).
+1. Install Claude Code (you'll need a Claude account). Pick your terminal:
+   ```bash
+   # macOS / Linux
+   curl -fsSL https://claude.ai/install.sh | bash
+   # Windows PowerShell
+   irm https://claude.ai/install.ps1 | iex
+   # Windows CMD
+   curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
+   # or, any system with Node.js
+   npm install -g @anthropic-ai/claude-code
+   ```
+   On Windows, if `claude` is "not recognized" afterwards, see the PATH fix in the
+   [main README, section 6](../README.md#6-the-same-agent-with-claude-code--folder-03).
 2. Open the **Terminal**, go into this folder (`cd ` then drag the folder in, press Enter),
    and type:
    ```bash

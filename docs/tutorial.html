@@ -250,11 +250,30 @@ tool_table &lt;- tool(
      far more capable model, without programming anything.</p>
 
   <ol class="steps">
-    <li class="step"><b>Install it:</b>
-      <pre style="margin:8px 0 0"><code># native option
-curl -fsSL https://claude.com/install.sh | bash
-# or with npm
-npm install -g @anthropic-ai/claude-code</code></pre></li>
+    <li class="step"><b>Install it</b>, pick the command for your terminal:
+      <pre style="margin:8px 0 0"><code># macOS / Linux (Terminal)
+curl -fsSL https://claude.ai/install.sh | bash
+
+# Windows PowerShell
+irm https://claude.ai/install.ps1 | iex
+
+# Windows CMD
+curl -fsSL https://claude.ai/install.cmd -o install.cmd &amp;&amp; install.cmd &amp;&amp; del install.cmd
+
+# Any system with Node.js (works everywhere)
+npm install -g @anthropic-ai/claude-code
+
+# From inside R (it shells out to your system)
+system("npm install -g @anthropic-ai/claude-code")</code></pre>
+      <div class="note" style="margin-top:10px;"><b>Windows: "claude is not recognized"?</b> The installer put <code>claude</code> in
+      <code>%USERPROFILE%\.local\bin</code>, but that folder isn't on your PATH yet. Run this in
+      <b>PowerShell</b>, then close and reopen the terminal:
+      <pre style="margin:8px 0 0"><code>$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+$claudePath = "$env:USERPROFILE\.local\bin"
+if (($userPath -split ';') -notcontains $claudePath) {
+    [Environment]::SetEnvironmentVariable("Path", "$userPath;$claudePath", "User")
+}</code></pre></div>
+    </li>
     <li class="step"><b>Enter the</b> <code>03-claude-code</code> folder and run <code>claude</code>.</li>
     <li class="step"><b>Ask the same thing:</b> "Give me Table 1 comparing by treatment, with p-values."</li>
   </ol>

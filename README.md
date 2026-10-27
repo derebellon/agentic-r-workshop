@@ -45,8 +45,9 @@ Install these in order. Each is a normal installer, just download and click thro
    on Windows it runs in the background. Leave it running.
 
 4. **Claude Code** (an external AI agent, only needed for folder `03`) → https://claude.com/claude-code
-   Follow the install instructions there. You will need a (free or paid) Claude account to
-   sign in. *You can skip this one for now and still do folders 01 and 02.*
+   Per-terminal install commands (CMD, PowerShell, bash, npm, or from inside R) are in
+   **section 6** below. You will need a (free or paid) Claude account to sign in.
+   *You can skip this one for now and still do folders 01 and 02.*
 
 ---
 
@@ -183,19 +184,46 @@ To try it:
 Folder `03-claude-code` runs the **same idea** but with **Claude Code**, a much more capable
 external agent (it uses Claude in the cloud). You need Claude Code installed (section 1.4).
 
-1. Open the **Terminal**.
-2. Go into the folder. Type `cd ` (with a space), then drag the `03-claude-code` folder from
+1. **Install Claude Code**, pick the command for your terminal:
+   ```bash
+   # macOS / Linux (Terminal)
+   curl -fsSL https://claude.ai/install.sh | bash
+
+   # Windows PowerShell
+   irm https://claude.ai/install.ps1 | iex
+
+   # Windows CMD
+   curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
+
+   # Any system with Node.js (works everywhere)
+   npm install -g @anthropic-ai/claude-code
+
+   # From inside R (it shells out to your system)
+   system("npm install -g @anthropic-ai/claude-code")
+   ```
+   **Windows: if `claude` is "not recognized"** after installing, the program is in
+   `%USERPROFILE%\.local\bin` but not on your PATH yet. Run this in **PowerShell**, then close
+   and reopen the terminal:
+   ```powershell
+   $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+   $claudePath = "$env:USERPROFILE\.local\bin"
+   if (($userPath -split ';') -notcontains $claudePath) {
+       [Environment]::SetEnvironmentVariable("Path", "$userPath;$claudePath", "User")
+   }
+   ```
+2. Open the **Terminal**.
+3. Go into the folder. Type `cd ` (with a space), then drag the `03-claude-code` folder from
    your file explorer into the Terminal window (it pastes the path), then press Enter.
    It looks like:
    ```bash
    cd /Users/you/Desktop/agentic-r-workshop/03-claude-code
    ```
-3. Start Claude Code by typing:
+4. Start Claude Code by typing:
    ```bash
    claude
    ```
    (The first time, it will ask you to sign in, follow the prompts.)
-4. Now just **type your request in plain English**, for example:
+5. Now just **type your request in plain English**, for example:
    ```
    Give me Table 1 comparing by treatment, with p-values
    ```
