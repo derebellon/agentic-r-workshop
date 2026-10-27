@@ -16,17 +16,22 @@ running real R code on your own computer in about 15 minutes.
 
 Through this guide you type commands in **two different places**. Don't mix them up:
 
-| Where | What it looks like | What you type there |
+| Where | What it is | What you type there |
 |---|---|---|
-| **The R console** (inside **RStudio**) | A pane with a `>` prompt | R commands, like `install.packages("ellmer")` or `source("agent.R")` |
-| **The Terminal** (your operating system) | A black/white window with a `$` or `>` prompt | System commands, like `ollama pull qwen2.5:3b` |
+| **The R console** | The pane with a `>` prompt, inside **RStudio** | R commands, like `install.packages("ellmer")` or `source("agent.R")` |
+| **The Terminal** | A window of your operating system with a `$` or `>` prompt | System commands, like `ollama pull qwen2.5:3b` |
 
-**How to open the Terminal:**
-- **Mac:** press `Cmd + Space`, type `Terminal`, press Enter.
-- **Windows:** press the Start button, type `PowerShell`, press Enter.
+**Good news: RStudio has both.** In the bottom-left pane there is a **Console** tab (that's R)
+and, right next to it, a **Terminal** tab (the system terminal). You can do almost everything
+from this one window, the two red arrows below point to each:
 
-Whenever a step says *"in the Terminal"* use that window. When it says *"in R"* or *"in the
-R console"*, use RStudio.
+![RStudio: the Console tab and the Terminal tab](docs/img/rstudio-console-and-terminal.jpg)
+
+> Prefer a separate system terminal? On **Mac** press `Cmd + Space`, type `Terminal`, Enter.
+> On **Windows** press Start, type `PowerShell`, Enter.
+
+Whenever a step says *"in the R console"*, use the **Console** tab (or pane). When it says
+*"in the Terminal"*, use the **Terminal** tab (or a separate system terminal).
 
 ---
 
@@ -92,6 +97,18 @@ This downloads a small AI model (~2 GB) to your computer. One time only.
 
 > Want to see the model work on its own? In the Terminal type `ollama run qwen2.5:3b`,
 > chat with it, and type `/bye` to exit. (This is optional.)
+
+> **Shortcut, do it all from RStudio.** Every command marked *"in the Terminal"* also works
+> in RStudio's **Terminal tab** (bottom-left, next to Console), so you never leave the window.
+> You can even run them from the **R console** with `system()`:
+> ```r
+> system("ollama pull qwen2.5:3b")                       # download the model
+> system("npm install -g @anthropic-ai/claude-code")      # install Claude Code (needs Node.js)
+> ```
+> The one step that still uses a normal installer is **installing the Ollama app itself**
+> (from ollama.com, a one-time click, or `brew install ollama` on Mac /
+> `winget install Ollama.Ollama` on Windows). After that, Ollama runs in the background and
+> everything else can be driven from R.
 
 ---
 
