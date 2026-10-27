@@ -62,6 +62,9 @@ if (have("ollama")) {
   cat("[3/4] Downloading the model qwen2.5:3b (~2 GB, first time only).\n")
   cat("      This can take several minutes. You'll see download progress below. Please wait.\n")
   flush.console()
+  # Make sure the Ollama background server is up before we pull (harmless if already running).
+  try(system("ollama serve", wait = FALSE, ignore.stdout = TRUE, ignore.stderr = TRUE), silent = TRUE)
+  Sys.sleep(2)
   system("ollama pull qwen2.5:3b")
 } else {
   cat("[3/4] Skipping the model download until Ollama is available.\n")
