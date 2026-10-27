@@ -48,6 +48,13 @@ Install these in order. Each is a normal installer, just download and click thro
 3. **Ollama** (lets you run AI models on your own computer, free) → https://ollama.com/download
    Download, install, and open it once. On Mac it shows a small icon in the top menu bar;
    on Windows it runs in the background. Leave it running.
+   **Or install it from the terminal** (works on all systems):
+   ```bash
+   # macOS / Linux
+   curl -fsSL https://ollama.com/install.sh | sh
+   # Windows PowerShell
+   irm https://ollama.com/install.ps1 | iex
+   ```
 
 4. **Claude Code** (an external AI agent, only needed for folder `03`) → https://claude.com/claude-code
    Per-terminal install commands (CMD, PowerShell, bash, npm, or from inside R) are in
@@ -105,10 +112,10 @@ This downloads a small AI model (~2 GB) to your computer. One time only.
 > system("ollama pull qwen2.5:3b")                       # download the model
 > system("npm install -g @anthropic-ai/claude-code")      # install Claude Code (needs Node.js)
 > ```
-> The one step that still uses a normal installer is **installing the Ollama app itself**
-> (from ollama.com, a one-time click, or `brew install ollama` on Mac /
-> `winget install Ollama.Ollama` on Windows). After that, Ollama runs in the background and
-> everything else can be driven from R.
+> Even **Ollama itself** installs from the terminal, so the whole setup can happen inside
+> RStudio's Terminal tab:
+> `curl -fsSL https://ollama.com/install.sh | sh` (Mac/Linux) or
+> `irm https://ollama.com/install.ps1 | iex` (Windows PowerShell).
 
 ---
 

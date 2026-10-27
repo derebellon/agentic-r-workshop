@@ -134,16 +134,16 @@
   </ul>
 
   <h3>2.1 Install Ollama</h3>
+  <p>Install it from the terminal (works on every system), or download the installer from
+     <a href="https://ollama.com/download">ollama.com/download</a>:</p>
   <div class="os">
     <div class="card" style="flex:1;min-width:220px">
-      <b>macOS / Windows</b>
-      Download the installer from
-      <a href="https://ollama.com/download">ollama.com/download</a> and open it.
-      On Mac you can also: <code>brew install ollama</code>.
+      <b>macOS / Linux</b>
+      <pre style="margin:6px 0 0"><code>curl -fsSL https://ollama.com/install.sh | sh</code></pre>
     </div>
     <div class="card" style="flex:1;min-width:220px">
-      <b>Linux</b>
-      <pre style="margin:6px 0 0"><code>curl -fsSL https://ollama.com/install.sh | sh</code></pre>
+      <b>Windows (PowerShell)</b>
+      <pre style="margin:6px 0 0"><code>irm https://ollama.com/install.ps1 | iex</code></pre>
     </div>
   </div>
 
