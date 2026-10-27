@@ -45,6 +45,19 @@ load_data <- function(path = "cohort.csv") {
   }
   d <- read.csv(path, stringsAsFactors = TRUE)
   d$id <- NULL                      # the id is not analysed
+
+  # Make the values and names read nicely in tables (gtsummary uses these labels).
+  d$sex <- factor(d$sex, levels = c("F", "M"), labels = c("Female", "Male"))
+  d$treatment <- factor(d$treatment, levels = c("control", "trt1", "trt2"),
+                        labels = c("Control", "Treatment 1", "Treatment 2"))
+  d$comorbidities <- factor(d$comorbidities, levels = c("no", "yes"), labels = c("No", "Yes"))
+  d$died <- factor(d$died, levels = c(0, 1), labels = c("Alive", "Died"))
+  attr(d$age, "label")           <- "Age (years)"
+  attr(d$sex, "label")           <- "Sex"
+  attr(d$treatment, "label")     <- "Treatment"
+  attr(d$comorbidities, "label") <- "Comorbidities"
+  attr(d$died, "label")          <- "Died"
+
   .state$data <- d
   paste0("Data loaded from '", path, "': ", nrow(d), " rows and ",
          ncol(d), " variables (", paste(names(d), collapse = ", "), ").")
@@ -83,11 +96,11 @@ make_table <- function(compare_by = NULL) {
   # Save an HTML version (if gt is available)
   tryCatch({
     ensure_package("gt")
-    gt::gtsave(as_gt(tbl), "table.html")
+    suppressWarnings(gt::gtsave(as_gt(tbl), "table.html"))
   }, error = function(e) invisible(NULL))
 
   # Return the table as text so the model can read and interpret it
-  text <- tbl |> as_tibble() |> knitr::kable(format = "pipe") |> paste(collapse = "\n")
+  text <- suppressWarnings(tbl |> as_tibble() |> knitr::kable(format = "pipe") |> paste(collapse = "\n"))
   paste0(title, " (saved to table.html):\n\n", text)
 }
 
@@ -131,10 +144,10 @@ fit_model <- function(outcome = "died", predictors = NULL) {
   # Save an HTML version (if gt is available)
   tryCatch({
     ensure_package("gt")
-    gt::gtsave(as_gt(tbl), "regression_table.html")
+    suppressWarnings(gt::gtsave(as_gt(tbl), "regression_table.html"))
   }, error = function(e) invisible(NULL))
 
-  text <- tbl |> as_tibble() |> knitr::kable(format = "pipe") |> paste(collapse = "\n")
+  text <- suppressWarnings(tbl |> as_tibble() |> knitr::kable(format = "pipe") |> paste(collapse = "\n"))
   paste0("Logistic regression ", deparse(f),
          " as a gtsummary table (OR > 1 = more risk, OR < 1 = less risk), saved to regression_table.html:\n\n",
          text)
