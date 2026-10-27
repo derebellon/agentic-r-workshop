@@ -57,20 +57,32 @@ if (have("ollama")) {
   cat("[3/4] Skipping the model download until Ollama is available.\n")
 }
 
-# --- 4. Claude Code (OPTIONAL, only for folder 03) ----------
-# Set to TRUE if you want this script to install Claude Code too.
-INSTALL_CLAUDE <- FALSE
-if (INSTALL_CLAUDE && !have("claude")) {
+# --- 4. Claude Code (installed by default, for folder 03) ---
+# Installed and added to your PATH automatically. Set to FALSE to skip.
+INSTALL_CLAUDE <- TRUE
+if (have("claude")) {
+  cat("[4/4] Claude Code: already installed.\n")
+} else if (INSTALL_CLAUDE) {
   cat("[4/4] Installing Claude Code...\n")
-  if (have("npm")) {
-    system("npm install -g @anthropic-ai/claude-code")
-  } else if (os != "Windows") {
-    system("curl -fsSL https://claude.ai/install.sh | bash")
-  } else {
-    system('powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://claude.ai/install.ps1 | iex"')
-  }
+  tryCatch({
+    if (os == "Windows") {
+      system('powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://claude.ai/install.ps1 | iex"')
+      # Add Claude to the user PATH so 'claude' is recognized (fixes the Windows
+      # 'claude is not recognized' problem). Written to a temp .ps1 to avoid quoting issues.
+      ps <- c(
+        '$u = [Environment]::GetEnvironmentVariable("Path","User")',
+        '$c = "$env:USERPROFILE\\.local\\bin"',
+        'if (($u -split ";") -notcontains $c) { [Environment]::SetEnvironmentVariable("Path", "$u;$c", "User") }'
+      )
+      f <- tempfile(fileext = ".ps1"); writeLines(ps, f)
+      system(paste0('powershell -NoProfile -ExecutionPolicy Bypass -File "', f, '"'))
+      cat("   Added Claude to your user PATH. If 'claude' still isn't found, restart RStudio.\n")
+    } else {
+      system("curl -fsSL https://claude.ai/install.sh | bash")
+    }
+  }, error = function(e) cat("   (Claude install failed:", conditionMessage(e), ")\n"))
 } else {
-  cat("[4/4] Claude Code: skipped (optional, only needed for folder 03).\n")
+  cat("[4/4] Claude Code: skipped (set INSTALL_CLAUDE <- TRUE to install).\n")
 }
 
 # --- Final check --------------------------------------------
@@ -82,6 +94,7 @@ ok_model  <- tryCatch(any(grepl("qwen2.5:3b", system("ollama list", intern = TRU
 cat(" ellmer R package :", if (ok_ellmer) "OK" else "MISSING", "\n")
 cat(" ollama installed :", if (ok_ollama) "OK" else "MISSING", "\n")
 cat(" model qwen2.5:3b :", if (isTRUE(ok_model)) "OK" else "not downloaded yet", "\n")
+cat(" claude (folder 03):", if (have("claude")) "OK" else "installed - restart RStudio if not found", "\n")
 
 if (ok_ellmer && ok_ollama && isTRUE(ok_model)) {
   cat("\n All set! Next: set your working directory to 02-complete-skeleton and run:\n")

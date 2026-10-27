@@ -98,10 +98,10 @@ In RStudio, set the working directory to the `agentic-r-workshop` folder
 source("setup.R")
 ```
 
-It installs `ellmer`, installs Ollama if it's missing, downloads the model, and checks that
-everything works. **Run it from the R console, not the Terminal** — the script detects your
-operating system and picks the right commands itself (so you don't need to know PowerShell vs
-bash).
+It installs `ellmer`, installs Ollama and downloads the model, and installs **Claude Code**
+(adding it to your PATH automatically), then checks that everything works. **Run it from the R
+console, not the Terminal** — the script detects your operating system and picks the right
+commands itself (so you don't need to know PowerShell vs bash).
 
 - It should **not** ask you questions. The one exception: if Ollama wasn't installed yet, its
   installer may ask for your computer's **admin password** (that's normal, it's installing an app).
@@ -239,6 +239,9 @@ To try it:
 
 Folder `03-claude-code` runs the **same idea** but with **Claude Code**, a much more capable
 external agent (it uses Claude in the cloud). You need Claude Code installed (section 1.4).
+
+> **Already ran `setup.R` (section 3)?** Then Claude Code is installed and on your PATH, skip
+> to step 2. Otherwise, install it now:
 
 1. **Install Claude Code**, pick the command for your terminal:
    ```bash
