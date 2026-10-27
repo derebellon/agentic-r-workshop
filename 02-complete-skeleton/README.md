@@ -1,7 +1,6 @@
 # 02 — The working agent (START HERE)
 
-This is the agent **Rho**, ready to run. Full step-by-step is in the
-[main README](../README.md#4-run-the-working-agent--folder-02-start-here). Quick version:
+This is the agent **Rho**, ready to run. Full step-by-step is in the [main README](../README.md) (section 5). Quick version:
 
 **In RStudio:**
 1. **Session menu → Set Working Directory → Choose Directory…** → pick this folder.

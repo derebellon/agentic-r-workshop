@@ -1,7 +1,7 @@
 # 01 — The empty skeleton (to learn and customise)
 
 The same program as `02`, but **empty**, so you can see how simple an agent is and build your
-own. Full guide in the [main README](../README.md#5-build-your-own-agent--folder-01).
+own. Full guide in the [main README](../README.md) (section 6).
 
 Three files:
 - `soul.md` — who the agent is and its rules. **Edit this.**
