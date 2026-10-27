@@ -75,12 +75,17 @@ agentic-r-workshop/
 
 ## 3. Set up everything with one command
 
-In RStudio, set the working directory to the `agentic-r-workshop` folder
-(**Session → Set Working Directory → Choose Directory…**), then in the **R console** run:
+In RStudio, set the working directory to the **top** `agentic-r-workshop` folder, the one
+that contains `setup.R` (**not** a subfolder), via **Session → Set Working Directory → Choose
+Directory…**. Then in the **R console** run:
 
 ```r
 source("setup.R")
 ```
+
+> `cannot open file 'setup.R'`? You're in the wrong folder. If you're already inside
+> `02-complete-skeleton`, run `source("../setup.R")` instead (the `../` goes up one folder to
+> find it), or just set the working directory to the top folder.
 
 It installs the `ellmer` package, installs Ollama and downloads the model, and installs
 **Claude Code** (adding it to your PATH automatically), then checks that everything works.
@@ -152,6 +157,9 @@ if (($userPath -split ';') -notcontains $claudePath) {
 
 This is the fun part. The agent **Rho** will build a table and run a statistical model on
 example patient data, just by asking in plain English.
+
+> Note the folders: you ran `setup.R` from the **top** folder (section 3); the agent runs
+> from **inside `02-complete-skeleton`**. So now you switch the working directory down into it.
 
 1. Open **RStudio**.
 2. Tell RStudio to work inside the `02-complete-skeleton` folder:
