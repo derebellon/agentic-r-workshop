@@ -309,6 +309,7 @@ the agent will "discover" things we already know are true:
 | `Model "qwen2.5:3b" is not installed` | In the Terminal: `ollama pull qwen2.5:3b`. |
 | Nothing happens / connection error | Make sure the **Ollama app is open and running**. |
 | `ellmer` errors | In R: `install.packages("ellmer")` again. |
+| Install fails with `namespace 'rlang' ... is required` (or similar) | Your **R is too old**. Update R to the latest from [cran.r-project.org](https://cran.r-project.org), point RStudio at it (Tools → Global Options → R version), restart, and run `setup.R` again. |
 | Windows: `claude` not recognized | See the PATH fix in **section 4**, then reopen the terminal. |
 | First answer is very slow | Normal, the model is loading. Ask again, it's fast after that. |
 | Want a more powerful model | In the Terminal `ollama pull qwen3:4b`, then in R before `source`: `Sys.setenv(AGENT_MODEL="qwen3:4b")`. |

@@ -19,6 +19,16 @@ options(install.packages.compile.from.source = "never")
 cat("\n================ Agentic R setup ================\n\n")
 flush.console()
 
+# Old R is the #1 cause of install failures: the latest packages need recent
+# dependencies that, on old R, only come as source and need a compiler (Rtools).
+if (getRversion() < "4.4.0") {
+  cat("WARNING: your R is ", as.character(getRversion()), " (old).\n", sep = "")
+  cat("  If the package install below fails (e.g. 'namespace rlang ... is required'),\n")
+  cat("  update R to the latest version from https://cran.r-project.org and run this again.\n")
+  cat("  (In RStudio: Tools -> Global Options -> General -> R version, pick the new R.)\n\n")
+  flush.console()
+}
+
 os <- Sys.info()[["sysname"]]          # "Windows", "Darwin" (Mac), or "Linux"
 have <- function(cmd) nzchar(Sys.which(cmd))   # is a program on the PATH?
 
