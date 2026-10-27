@@ -1,49 +1,23 @@
-# 02 - Complete skeleton (working)
+# 02 — The working agent (START HERE)
 
-The same harness as in `01`, but with the **soul filled in** and **three real tools**
-that analyse the synthetic cohort (`cohort.csv`).
+This is the agent **Rho**, ready to run. Full step-by-step is in the
+[main README](../README.md#4-run-the-working-agent--folder-02-start-here). Quick version:
 
-```
-agent.R      <- the loop (identical to 01's)
-soul.md      <- Rho, an epidemiology assistant in R (filled in)
-tools.R      <- load_data, make_table (gtsummary + add_p), fit_model (glm)
-cohort.csv   <- example data (400 patients)
-```
+**In RStudio:**
+1. **Session menu → Set Working Directory → Choose Directory…** → pick this folder.
+2. In the R console:
+   ```r
+   source("agent.R")
+   ask("Give me Table 1 comparing by treatment, with p-values")
+   ask("Which variables are associated with higher mortality?")
+   ```
 
-## Run it (local model with Ollama)
+It builds the table with `gtsummary` (saved to `table.html`) and fits a logistic regression,
+all on your computer with a free local model.
 
-Requirements: R, `ellmer`, and Ollama with a model (see `docs/tutorial.html`).
-Defaults to `qwen2.5:3b` (fast and light).
+The files: `soul.md` (who the agent is) · `tools.R` (its R functions) · `agent.R` (the
+engine) · `cohort.csv` (the example data). Going from the empty folder `01` to this one is
+just filling in `soul.md` and `tools.R`.
 
-**Inside R / RStudio:**
-```r
-source("agent.R")
-ask("Give me Table 1 comparing by treatment, with p-values")
-ask("Which variables are associated with higher mortality?")
-```
-
-**In the terminal (chat mode):**
-```bash
-Rscript agent.R
-```
-
-## What to expect
-- `make_table(compare_by = "treatment")` -> comparative Table 1 with gtsummary
-  and p-values (`add_p`). Saved to `table.html`.
-- `fit_model()` -> logistic regression with Odds Ratios. It should show that
-  **comorbidities** and **trt2** raise mortality, and **trt1** lowers it
-  (these associations are baked into the dataset on purpose).
-
-If a library (e.g. `gtsummary`) is not installed, the tool installs it itself.
-
-## The lesson
-Going from `01` to `02` is JUST filling in `soul.md` and `tools.R`. The engine
-(`agent.R`) does not change. That is how you "customise" an agent to work with
-YOUR libraries and functions.
-
-## Switch model
-```bash
-AGENT_MODEL=qwen3:4b Rscript agent.R       # local, reasons better, slower
-AGENT_MODEL=gpt-oss:20b Rscript agent.R    # local, more capable, ~16 GB RAM
-AGENT_ENGINE=claude AGENT_MODEL=claude-sonnet-5 Rscript agent.R   # Claude (cloud)
-```
+**Requirements:** R, RStudio, the `ellmer` package, and Ollama with a model
+(`ollama pull qwen2.5:3b`). See the main README, sections 1 and 3.

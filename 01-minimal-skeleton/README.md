@@ -1,37 +1,19 @@
-# 01 - Minimal skeleton
+# 01 — The empty skeleton (to learn and customise)
 
-The smallest agent that runs: harness + soul (almost empty) + one example tool.
-It exists to show the 3 pieces before you fill them in.
+The same program as `02`, but **empty**, so you can see how simple an agent is and build your
+own. Full guide in the [main README](../README.md#5-build-your-own-agent--folder-01).
 
-```
-agent.R     <- the loop (the "engine"). You don't touch it.
-soul.md     <- who the agent is (TEMPLATE: fill it in)
-tools.R     <- its tools (ships with 1 example: the time)
-```
+Three files:
+- `soul.md` — who the agent is and its rules. **Edit this.**
+- `tools.R` — the R functions it can run (ships with one example: the time). **Add yours.**
+- `agent.R` — the engine. **Don't touch it.**
 
-## Run it (local model with Ollama)
-
-Requirements: R, the `ellmer` package, and Ollama with a model downloaded
-(see `docs/tutorial.html`). Defaults to `qwen2.5:3b`.
-
-**Option A - inside R / RStudio:**
-```r
-source("agent.R")
-ask("What time is it?")
-```
-
-**Option B - in the terminal (chat mode):**
-```bash
-Rscript agent.R
-```
-
-## Your task in the workshop
-1. Give the agent an identity in `soul.md`.
-2. Add your own tools in `tools.R`.
-3. Compare with `02-complete-skeleton/`, which is already filled in.
-
-## Switch model
-```bash
-AGENT_MODEL=qwen3:4b Rscript agent.R      # local, reasons better
-AGENT_ENGINE=claude Rscript agent.R        # Claude in the cloud (needs ANTHROPIC_API_KEY)
-```
+**Try it (in RStudio):**
+1. **Session → Set Working Directory → Choose Directory…** → pick this folder.
+2. In the R console:
+   ```r
+   source("agent.R")
+   ask("What time is it?")
+   ```
+3. Open `soul.md` and `tools.R`, edit and save, then `source("agent.R")` again to reload.
+   Compare with `02-complete-skeleton` to see where you're headed.
