@@ -37,7 +37,7 @@ MODEL  <- Sys.getenv("AGENT_MODEL",
                      if (ENGINE == "claude") "claude-sonnet-5" else "qwen2.5:3b")
 
 # ---- 2. THE SOUL (system prompt) ---------------------------
-soul <- paste(readLines("soul.md", warn = FALSE), collapse = "\n")
+soul <- paste(readLines("agent/soul.md", warn = FALSE), collapse = "\n")
 
 # ---- 3. CREATE THE CHAT with the chosen engine -------------
 # This is the ONLY difference between running LOCAL and in the CLOUD:
@@ -53,7 +53,7 @@ make_chat <- function() {
 chat <- make_chat()
 
 # ---- 4. LOAD AND REGISTER THE TOOLS ------------------------
-source("tools.R")              # defines the list TOOLS
+source("agent/tools.R")        # defines the list TOOLS
 for (t in TOOLS) chat$register_tool(t)
 
 # ---- 5. TALK TO THE AGENT ----------------------------------

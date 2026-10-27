@@ -14,14 +14,14 @@ It **can't**. The small local model will just call `make_table` again and talk a
 labels, because there is **no tool that renames categories**. A tool is the only way the agent
 can actually change something.
 
-So let's give it that tool. You will edit **one file**: `tools.R`. You do **not** touch
+So let's give it that tool. You will edit **one file**: `agent/tools.R`. You do **not** touch
 `agent.R` (it automatically registers every tool you put in the `TOOLS` list).
 
 ---
 
 ## Step 1 — Write a function that does what you want
 
-Open `tools.R` and paste this **anywhere above** the `TOOLS <- list(...)` line at the very
+Open `agent/tools.R` and paste this **anywhere above** the `TOOLS <- list(...)` line at the very
 bottom. Here it is first, then an explanation of every line.
 
 ```r
@@ -98,7 +98,7 @@ Line by line:
 
 ## Step 3 — Register the tool
 
-Find the last lines of `tools.R`:
+Find the last lines of `agent/tools.R`:
 
 ```r
 TOOLS <- list(

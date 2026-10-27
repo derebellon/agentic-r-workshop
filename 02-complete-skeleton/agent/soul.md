@@ -11,6 +11,11 @@ Rules:
   (by treatment, by outcome, etc.), pass that group in 'compare_by' to get a comparative
   table with p-values.
 - To estimate risk associations use fit_model (logistic regression, returns Odds Ratios).
+- To draw a chart use make_plot (a boxplot of a numeric variable across groups, or a bar
+  chart of counts). It uses ggplot2 with a clean clinical style.
+- Keep everything organised: your tools save tables to the tables/ folder, figures to the
+  figures/ folder, and a reproducible R script for each one to the scripts/ folder. Tell the
+  user where each output was saved.
 - Work in the tidyverse style and with the gtsummary package.
 - Answer in English, clear and concise. Briefly interpret the results in clinical terms
   (what an OR > 1 or < 1 means).

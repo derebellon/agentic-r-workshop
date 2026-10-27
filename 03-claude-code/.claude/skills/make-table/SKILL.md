@@ -14,10 +14,10 @@ Generate a Table 1 from `data/cohort.csv` using **gtsummary**.
 ## How to do it
 
 1. Make sure `gtsummary` is installed; if not, install it.
-2. Write a script at `R/make_table.R` with this pattern and run it with `Rscript`.
+2. Write a script at `scripts/make_table.R` with this pattern and run it with `Rscript`.
 
 ```r
-# R/make_table.R
+# scripts/make_table.R
 if (!requireNamespace("gtsummary", quietly = TRUE))
   install.packages("gtsummary", repos = "https://cloud.r-project.org")
 library(gtsummary)
@@ -31,8 +31,9 @@ tbl <- tbl_summary(data)
 # --- COMPARATIVE table (uncomment and set the grouping variable) ---
 # tbl <- tbl_summary(data, by = treatment) |> add_p()
 
-# Save to HTML and print to the console
-gtsummary::as_gt(tbl) |> gt::gtsave("table.html")
+# Save to HTML (in tables/) and print to the console
+dir.create("tables", showWarnings = FALSE)
+gtsummary::as_gt(tbl) |> gt::gtsave("tables/table.html")
 print(as_tibble(tbl), n = 100)
 ```
 

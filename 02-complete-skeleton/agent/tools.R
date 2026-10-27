@@ -37,7 +37,7 @@ get_data <- function() {
 # ============================================================
 # TOOL 1: load_data
 # ============================================================
-load_data <- function(path = "cohort.csv") {
+load_data <- function(path = "data/cohort.csv") {
   # If data is already loaded, don't reload: that would wipe any changes made in
   # this session (e.g. a relabel the agent just did). Keep what we have.
   if (!is.null(.state$data)) {
@@ -45,7 +45,8 @@ load_data <- function(path = "cohort.csv") {
                   ncol(.state$data), " variables); keeping any changes already made."))
   }
   if (!file.exists(path)) {
-    for (alt in c(path, file.path("..", "data", basename(path)), basename(path))) {
+    for (alt in c(path, file.path("data", basename(path)),
+                  file.path("..", "data", basename(path)), basename(path))) {
       if (file.exists(alt)) { path <- alt; break }
     }
   }
@@ -88,10 +89,11 @@ make_table <- function(compare_by = NULL, variable = NULL, predictors = NULL) {
     title <- paste0("Comparative table by '", compare_by, "' (with p-values)")
   }
 
+  dir.create("tables", showWarnings = FALSE); dir.create("scripts", showWarnings = FALSE)
   # Save an HTML version (if gt is available)
   tryCatch({
     ensure_package("gt")
-    suppressWarnings(gt::gtsave(as_gt(tbl), "table.html"))
+    suppressWarnings(gt::gtsave(as_gt(tbl), "tables/table.html"))
   }, error = function(e) invisible(NULL))
 
   # Save the reproducible R script that produces this table
@@ -101,19 +103,20 @@ make_table <- function(compare_by = NULL, variable = NULL, predictors = NULL) {
     else
       paste0("tbl <- tbl_summary(data, by = ", compare_by, ") |> add_p()")
     writeLines(c(
-      "# Reproducible script for this table (written by the agent's make_table tool)",
+      "# Reproducible script for this table (written by the agent's make_table tool).",
+      "# Run it from the folder root (where agent.R is).",
       "library(gtsummary)",
-      'data <- read.csv("cohort.csv", stringsAsFactors = TRUE)',
+      'data <- read.csv("data/cohort.csv", stringsAsFactors = TRUE)',
       "data$id <- NULL",
       line_tbl,
-      'gtsummary::as_gt(tbl) |> gt::gtsave("table.html")',
+      'gtsummary::as_gt(tbl) |> gt::gtsave("tables/table.html")',
       "tbl"
-    ), "table.R")
+    ), "scripts/table.R")
   }, error = function(e) invisible(NULL))
 
   # Return the table as text so the model can read and interpret it
   text <- suppressWarnings(tbl |> as_tibble() |> knitr::kable(format = "pipe") |> paste(collapse = "\n"))
-  paste0(title, " (saved to table.html and the script to table.R):\n\n", text)
+  paste0(title, " (table saved to tables/table.html, script to scripts/table.R):\n\n", text)
 }
 
 tool_table <- tool(
@@ -155,30 +158,32 @@ fit_model <- function(outcome = "died", predictors = NULL) {
   # Regression table with gtsummary: Odds Ratios + 95% CI + p-values
   tbl <- tbl_regression(m, exponentiate = TRUE)
 
+  dir.create("tables", showWarnings = FALSE); dir.create("scripts", showWarnings = FALSE)
   # Save an HTML version (if gt is available)
   tryCatch({
     ensure_package("gt")
-    suppressWarnings(gt::gtsave(as_gt(tbl), "regression_table.html"))
+    suppressWarnings(gt::gtsave(as_gt(tbl), "tables/regression_table.html"))
   }, error = function(e) invisible(NULL))
 
   # Save the reproducible R script that produces this regression table
   tryCatch({
     writeLines(c(
-      "# Reproducible script for this regression table (written by the agent's fit_model tool)",
+      "# Reproducible script for this regression table (written by the agent's fit_model tool).",
+      "# Run it from the folder root (where agent.R is).",
       "library(gtsummary)",
-      'data <- read.csv("cohort.csv", stringsAsFactors = TRUE)',
+      'data <- read.csv("data/cohort.csv", stringsAsFactors = TRUE)',
       "data$id <- NULL",
       paste0("m <- glm(", deparse(f), ", data = data, family = binomial)"),
       "tbl <- tbl_regression(m, exponentiate = TRUE)",
-      'gtsummary::as_gt(tbl) |> gt::gtsave("regression_table.html")',
+      'gtsummary::as_gt(tbl) |> gt::gtsave("tables/regression_table.html")',
       "tbl"
-    ), "regression_table.R")
+    ), "scripts/regression_table.R")
   }, error = function(e) invisible(NULL))
 
   text <- suppressWarnings(tbl |> as_tibble() |> knitr::kable(format = "pipe") |> paste(collapse = "\n"))
   paste0("Logistic regression ", deparse(f),
-         " as a gtsummary table (OR > 1 = more risk, OR < 1 = less risk), saved to regression_table.html",
-         " and the script to regression_table.R:\n\n", text)
+         " as a gtsummary table (OR > 1 = more risk, OR < 1 = less risk), saved to tables/regression_table.html",
+         " and the script to scripts/regression_table.R:\n\n", text)
 }
 
 tool_model <- tool(
@@ -195,10 +200,91 @@ tool_model <- tool(
 )
 
 # ============================================================
+# TOOL 4: make_plot  (bar chart or boxplot with ggplot2)
+# ============================================================
+make_plot <- function(type = "boxplot", x = NULL, y = NULL, fill = NULL) {
+  ensure_package("ggplot2")
+  suppressPackageStartupMessages(library(ggplot2))
+  data <- get_data()
+  # Palette from the hemogram paper (SLATE, ROSE) + harmonious muted tones.
+  PAL <- c("#2D3A47", "#B46A72", "#6E8B74", "#C9A66B", "#9A8CA6")
+  type <- tolower(if (is.null(type) || !nzchar(type)) "boxplot" else type)
+  if (is.null(x) || !nzchar(x) || !x %in% names(data))
+    stop("Please give an existing 'x' variable. Variables: ", paste(names(data), collapse = ", "))
+
+  if (type %in% c("box", "boxplot")) {
+    if (is.null(y) || !nzchar(y) || !y %in% names(data))
+      stop("A boxplot needs a numeric 'y' variable, e.g. y = 'age'.")
+    data[[x]] <- as.factor(data[[x]])                      # groups must be categorical
+    code_setup <- paste0("data$", x, " <- as.factor(data$", x, ")")
+    p <- ggplot(data, aes(x = .data[[x]], y = .data[[y]], fill = .data[[x]])) +
+      geom_boxplot(alpha = 0.9, outlier.alpha = 0.4) +
+      scale_fill_manual(values = PAL) + labs(x = x, y = y) +
+      theme_classic(base_size = 13) + theme(legend.position = "none")
+    fname <- paste0("boxplot_", y, "_by_", x, ".png")
+    code_plot <- paste0("ggplot(data, aes(x = ", x, ", y = ", y, ", fill = ", x, ")) +\n",
+      "  geom_boxplot(alpha = 0.9, outlier.alpha = 0.4) +\n",
+      "  scale_fill_manual(values = PAL) + labs(x = \"", x, "\", y = \"", y, "\") +\n",
+      "  theme_classic(base_size = 13) + theme(legend.position = \"none\")")
+  } else {
+    fillvar <- if (!is.null(fill) && nzchar(fill) && fill %in% names(data)) fill else x
+    data[[x]] <- as.factor(data[[x]]); data[[fillvar]] <- as.factor(data[[fillvar]])
+    code_setup <- paste0("data$", x, " <- as.factor(data$", x, "); data$", fillvar, " <- as.factor(data$", fillvar, ")")
+    p <- ggplot(data, aes(x = .data[[x]], fill = .data[[fillvar]])) +
+      geom_bar(position = "dodge", alpha = 0.9) +
+      scale_fill_manual(values = PAL) + labs(x = x, y = "Count", fill = fillvar) +
+      theme_classic(base_size = 13)
+    fname <- paste0("barplot_", x, ".png")
+    code_plot <- paste0("ggplot(data, aes(x = ", x, ", fill = ", fillvar, ")) +\n",
+      "  geom_bar(position = \"dodge\", alpha = 0.9) +\n",
+      "  scale_fill_manual(values = PAL) + labs(x = \"", x, "\", y = \"Count\") +\n",
+      "  theme_classic(base_size = 13)")
+  }
+
+  dir.create("figures", showWarnings = FALSE); dir.create("scripts", showWarnings = FALSE)
+  suppressMessages(suppressWarnings(ggsave(file.path("figures", fname), p, width = 6, height = 4, dpi = 150)))
+
+  # Save the reproducible R script for this figure
+  tryCatch({
+    writeLines(c(
+      "# Reproducible script for this figure (written by the agent's make_plot tool).",
+      "# Run it from the folder root (where agent.R is).",
+      "library(ggplot2)",
+      'data <- read.csv("data/cohort.csv", stringsAsFactors = TRUE)',
+      "data$id <- NULL",
+      'PAL <- c("#2D3A47", "#B46A72", "#6E8B74", "#C9A66B", "#9A8CA6")',
+      code_setup,
+      paste0("p <- ", code_plot),
+      paste0('ggsave("figures/', fname, '", p, width = 6, height = 4, dpi = 150)'),
+      "p"
+    ), file.path("scripts", sub("\\.png$", ".R", fname)))
+  }, error = function(e) invisible(NULL))
+
+  paste0("Saved a ", type, " to figures/", fname,
+         " and the script to scripts/", sub("\\.png$", ".R", fname), ".")
+}
+
+tool_plot <- tool(
+  make_plot,
+  paste(
+    "Makes a pretty plot with ggplot2 (theme_classic, clinical colours) and saves it as a PNG.",
+    "Use type='boxplot' for a numeric variable across groups (needs x = group and y = numeric),",
+    "or type='bar' for counts of a categorical variable (needs x; optional fill)."
+  ),
+  arguments = list(
+    type = type_string("'boxplot' or 'bar'. Defaults to boxplot.", required = FALSE),
+    x    = type_string("The variable on the x axis / grouping, e.g. 'treatment'."),
+    y    = type_string("For a boxplot, the numeric variable, e.g. 'age'. Not needed for a bar chart.", required = FALSE),
+    fill = type_string("Optional: a second variable to colour bars by, e.g. 'died'.", required = FALSE)
+  )
+)
+
+# ============================================================
 # Final registration: all the agent's tools
 # ============================================================
 TOOLS <- list(
   tool_load,
   tool_table,
-  tool_model
+  tool_model,
+  tool_plot
 )

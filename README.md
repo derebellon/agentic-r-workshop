@@ -178,9 +178,15 @@ example patient data, just by asking in plain English.
    script `regression_table.R`**. You should see that **comorbidities** and **treatment 2**
    raise mortality, and **treatment 1** lowers it.
 
-> **Reproducible by design:** every table the agent makes also leaves behind the exact R
-> script that produced it (`table.R`, `regression_table.R`), so you can open, read, re-run or
-> tweak it yourself.
+6. Draw a chart:
+   ```r
+   ask("Make a boxplot of age by treatment")
+   ```
+   It uses `ggplot2` (clean clinical style, `theme_classic`) and saves the figure.
+
+> **Organised and reproducible by design:** the agent keeps its outputs tidy, tables go to
+> `tables/`, figures to `figures/`, and for *every* one it also saves the exact R script that
+> produced it in `scripts/`, so you can open, read, re-run or tweak any of them.
 
 That's it, you just used an AI agent to do real analysis, all on your own computer.
 
