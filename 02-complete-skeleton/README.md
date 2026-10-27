@@ -22,5 +22,8 @@ The files: `soul.md` (who the agent is) · `tools.R` (its R functions: `load_dat
 `make_table`, `fit_model`) · `agent.R` (the engine) · `cohort.csv` (the example data). Going
 from the empty folder `01` to this one is just filling in `soul.md` and `tools.R`.
 
+**Want to teach the agent a new skill?** See [ADDING-A-TOOL.md](ADDING-A-TOOL.md), a
+line-by-line, hands-on walkthrough of adding your own tool.
+
 **Requirements:** R, RStudio, the `ellmer` package, and Ollama with a model
 (`ollama pull qwen2.5:3b`). See the main README, sections 1 and 3.

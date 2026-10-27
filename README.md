@@ -223,6 +223,9 @@ tool(
 That's the whole trick: write the function, describe it well, register it. See `tools.R` in
 `02-complete-skeleton` for the full, working versions.
 
+**Hands-on exercise:** [`02-complete-skeleton/ADDING-A-TOOL.md`](02-complete-skeleton/ADDING-A-TOOL.md)
+walks you through adding a new tool from scratch (relabelling a variable), explained line by line.
+
 To try it:
 1. In RStudio, set the working directory to `01-minimal-skeleton` (as in step 5.2).
 2. In the R console: `source("agent.R")` then `ask("What time is it?")`.
