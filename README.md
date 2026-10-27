@@ -77,6 +77,7 @@ Inside you will find:
 
 ```
 agentic-r-workshop/
+├─ setup.R                 one-command installer (run this first, see section 3)
 ├─ data/                   the example patient data (cohort.csv)
 ├─ 01-minimal-skeleton/    an EMPTY agent, to learn the pieces
 ├─ 02-complete-skeleton/   a WORKING agent (start here!)
@@ -87,6 +88,30 @@ agentic-r-workshop/
 ---
 
 ## 3. One-time setup (do this once)
+
+### The easy way — one command
+
+In RStudio, set the working directory to the `agentic-r-workshop` folder
+(**Session → Set Working Directory → Choose Directory…**), then in the **R console** run:
+
+```r
+source("setup.R")
+```
+
+It installs `ellmer`, installs Ollama if it's missing, downloads the model, and checks that
+everything works. **Run it from the R console, not the Terminal** — the script detects your
+operating system and picks the right commands itself (so you don't need to know PowerShell vs
+bash).
+
+- It should **not** ask you questions. The one exception: if Ollama wasn't installed yet, its
+  installer may ask for your computer's **admin password** (that's normal, it's installing an app).
+- On Windows, if it says Ollama isn't visible yet, do **Session → Restart R** and run
+  `source("setup.R")` again.
+
+When the check shows everything `OK`, jump to **section 4**.
+
+<details>
+<summary><b>Or do it manually, step by step</b></summary>
 
 **3a. Install the `ellmer` package — in R.**
 Open **RStudio**. In the **R console** (the pane with `>`), type this and press Enter:
@@ -116,6 +141,8 @@ This downloads a small AI model (~2 GB) to your computer. One time only.
 > RStudio's Terminal tab:
 > `curl -fsSL https://ollama.com/install.sh | sh` (Mac/Linux) or
 > `irm https://ollama.com/install.ps1 | iex` (Windows PowerShell).
+
+</details>
 
 ---
 
