@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,7 +8,7 @@
   :root{
     --bg:#f7f8fa; --card:#ffffff; --ink:#1c2430; --muted:#5a6676;
     --line:#e3e7ee; --accent:#1f5fa8; --accent2:#0d7a66;
-    --code-bg:#0f1724; --code-ink:#e7edf5; --warn:#8a5a00; --warn-bg:#fff6e6;
+    --code-bg:#0f1724; --code-ink:#e7edf5;
     --radius:12px; --maxw:860px;
   }
   *{box-sizing:border-box}
@@ -41,7 +41,7 @@
     padding:16px 22px;margin:0 0 10px}
   .toc ol{margin:6px 0 0;padding-left:22px}
   .toc li{margin:4px 0}
-  .note{background:var(--warn-bg);border-left:4px solid #e0a500;color:#5c441a;
+  .note{background:#fff6e6;border-left:4px solid #e0a500;color:#5c441a;
     padding:12px 16px;border-radius:8px;margin:16px 0;font-size:15px}
   table{border-collapse:collapse;width:100%;margin:16px 0;font-size:15px;
     background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
@@ -55,7 +55,6 @@
   .box{border:2px solid var(--accent);border-radius:10px;padding:12px 16px;font-weight:600;text-align:center;min-width:120px;background:#f3f7fc}
   .box.tool{border-color:var(--accent2);background:#eef7f4}
   .arrow{font-size:22px;color:var(--muted);font-weight:700}
-  .tag{color:var(--accent2);font-weight:600}
   footer{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
   .os{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
   .os b{display:block;margin-bottom:4px}
@@ -71,76 +70,76 @@
 
 <header class="hero">
   <div class="wrap">
-    <p class="kicker">R Users Group · Taller práctico</p>
+    <p class="kicker">R Users Group · Hands-on workshop</p>
     <h1>Agentic R</h1>
-    <p>Cómo correr un agente de IA que escribe y ejecuta código R por ti — en tu
-       propia laptop, con un modelo local y gratis, o con Claude en la nube.</p>
+    <p>How to run an AI agent that writes and executes R code for you — on your own
+       laptop, with a free local model, or with Claude in the cloud.</p>
   </div>
 </header>
 
 <div class="wrap">
 
   <div class="toc">
-    <strong>En este tutorial</strong>
+    <strong>In this tutorial</strong>
     <ol>
-      <li><a href="#que-es">Qué es un agente (y por qué son 3 piezas)</a></li>
-      <li><a href="#ollama">Modelos locales con Ollama</a></li>
-      <li><a href="#harness">Correr el agente en R (el harness)</a></li>
-      <li><a href="#personalizar">Personalizar tu propio agente</a></li>
-      <li><a href="#claude">Claude Code CLI: los superpoderes</a></li>
-      <li><a href="#otras">Otras herramientas: Antigravity y VS Code</a></li>
-      <li><a href="#local-vs-nube">Local vs. nube: cuándo usar cuál</a></li>
+      <li><a href="#what">What an agent is (and why it's 3 pieces)</a></li>
+      <li><a href="#ollama">Local models with Ollama</a></li>
+      <li><a href="#harness">Running the agent in R (the harness)</a></li>
+      <li><a href="#customise">Customising your own agent</a></li>
+      <li><a href="#claude">Claude Code CLI: the superpowers</a></li>
+      <li><a href="#others">Other tools: Antigravity and VS Code</a></li>
+      <li><a href="#local-vs-cloud">Local vs. cloud: when to use which</a></li>
     </ol>
   </div>
 
   <!-- 1 -->
-  <h2 id="que-es"><span class="n">1</span>Qué es un agente</h2>
-  <p>Un agente de IA no es magia ni un chatbot más. Es un modelo de lenguaje (LLM)
-     al que le damos <b>herramientas</b> y lo dejamos trabajar en un <b>bucle</b>:
-     el modelo decide qué herramienta usar, nosotros ejecutamos esa función de verdad,
-     le devolvemos el resultado, y repite hasta terminar la tarea.</p>
+  <h2 id="what"><span class="n">1</span>What an agent is</h2>
+  <p>An AI agent is not magic and not just another chatbot. It is a language model (LLM)
+     that we give <b>tools</b> and let work in a <b>loop</b>: the model decides which tool
+     to use, we actually run that function, we hand back the result, and it repeats until
+     the task is done.</p>
 
   <div class="diagram">
-    <div class="box">MODELO<br><span class="muted" style="font-weight:400;font-size:13px">decide</span></div>
+    <div class="box">MODEL<br><span class="muted" style="font-weight:400;font-size:13px">decides</span></div>
     <div class="arrow">⇄</div>
-    <div class="box">LOOP<br><span class="muted" style="font-weight:400;font-size:13px">orquesta</span></div>
+    <div class="box">LOOP<br><span class="muted" style="font-weight:400;font-size:13px">orchestrates</span></div>
     <div class="arrow">⇄</div>
-    <div class="box tool">HERRAMIENTAS<br><span class="muted" style="font-weight:400;font-size:13px">ejecutan R</span></div>
+    <div class="box tool">TOOLS<br><span class="muted" style="font-weight:400;font-size:13px">run R</span></div>
   </div>
 
-  <p>Esa es la diferencia con el autocompletar: el agente <b>actúa</b>. Puede cargar
-     un CSV, correr una regresión, ver el error que salió y corregirse. En este taller
-     construimos exactamente eso, con tus funciones de R como herramientas.</p>
+  <p>That is the difference from autocomplete: the agent <b>acts</b>. It can load a CSV,
+     run a regression, see the error it got and fix itself. In this workshop we build
+     exactly that, with your R functions as tools.</p>
 
   <div class="card">
-    <b>Las 3 piezas, en archivos:</b>
+    <b>The 3 pieces, as files:</b>
     <table>
-      <tr><th>Pieza</th><th>En nuestro harness de R</th><th>Qué es</th></tr>
-      <tr><td>Modelo</td><td>una línea de config</td><td>el LLM (local o en la nube)</td></tr>
-      <tr><td>Herramientas</td><td><code>tools.R</code></td><td>tus funciones de R</td></tr>
-      <tr><td>Alma / reglas</td><td><code>alma.md</code></td><td>quién es y cómo se comporta</td></tr>
-      <tr><td>Loop</td><td><code>agente.R</code></td><td>el motor (no lo tocas)</td></tr>
+      <tr><th>Piece</th><th>In our R harness</th><th>What it is</th></tr>
+      <tr><td>Model</td><td>one config line</td><td>the LLM (local or cloud)</td></tr>
+      <tr><td>Tools</td><td><code>tools.R</code></td><td>your R functions</td></tr>
+      <tr><td>Soul / rules</td><td><code>soul.md</code></td><td>who it is and how it behaves</td></tr>
+      <tr><td>Loop</td><td><code>agent.R</code></td><td>the engine (you don't touch it)</td></tr>
     </table>
   </div>
 
   <!-- 2 -->
-  <h2 id="ollama"><span class="n">2</span>Modelos locales con Ollama</h2>
-  <p><b>Ollama</b> es una app gratis que te deja descargar y correr modelos de lenguaje
-     <b>en tu propia máquina</b>. Dos cosas lo hacen ideal para empezar:</p>
+  <h2 id="ollama"><span class="n">2</span>Local models with Ollama</h2>
+  <p><b>Ollama</b> is a free app that lets you download and run language models
+     <b>on your own machine</b>. Two things make it ideal to start with:</p>
   <ul>
-    <li><b>Privado y sin internet.</b> El modelo corre local; tus datos nunca salen de tu PC.
-        Útil con datos clínicos sensibles, o en un avión sin wifi.</li>
-    <li><b>Interfaz tipo ChatGPT, gratis.</b> Con un comando tienes un chat en la terminal
-        (y apps gráficas si quieres), sin pagar ni crear cuenta.</li>
+    <li><b>Private and offline.</b> The model runs locally; your data never leaves your PC.
+        Useful with sensitive clinical data, or on a plane with no wifi.</li>
+    <li><b>ChatGPT-like interface, free.</b> With one command you get a chat in the terminal
+        (and graphical apps if you want), without paying or creating an account.</li>
   </ul>
 
-  <h3>2.1 Instalar Ollama</h3>
+  <h3>2.1 Install Ollama</h3>
   <div class="os">
     <div class="card" style="flex:1;min-width:220px">
       <b>macOS / Windows</b>
-      Descarga el instalador desde
-      <a href="https://ollama.com/download">ollama.com/download</a> y ábrelo.
-      En Mac también: <code>brew install ollama</code>.
+      Download the installer from
+      <a href="https://ollama.com/download">ollama.com/download</a> and open it.
+      On Mac you can also: <code>brew install ollama</code>.
     </div>
     <div class="card" style="flex:1;min-width:220px">
       <b>Linux</b>
@@ -148,161 +147,160 @@
     </div>
   </div>
 
-  <h3>2.2 Descargar un modelo</h3>
-  <p>Elige según tu laptop. Para el taller recomendamos <code>qwen2.5:3b</code> (corre en casi cualquier PC):</p>
+  <h3>2.2 Download a model</h3>
+  <p>Pick one for your laptop. For the workshop we recommend <code>qwen2.5:3b</code> (runs on almost any PC):</p>
   <pre><code>ollama pull qwen2.5:3b</code></pre>
   <table>
-    <tr><th>Modelo</th><th>Tamaño</th><th>RAM sugerida</th><th>Notas</th></tr>
-    <tr><td><code>qwen2.5:3b</code></td><td>~2 GB</td><td>8 GB</td><td><b>Default.</b> Rápido, buen tool calling.</td></tr>
-    <tr><td><code>qwen3:4b</code></td><td>~2.6 GB</td><td>8–16 GB</td><td>Razona mejor, algo más lento.</td></tr>
-    <tr><td><code>gpt-oss:20b</code></td><td>~13 GB</td><td>16 GB+</td><td>El más capaz de esta lista.</td></tr>
-    <tr><td><code>llama3.2:3b</code></td><td>~2 GB</td><td>8 GB</td><td>Alternativa ligera.</td></tr>
+    <tr><th>Model</th><th>Size</th><th>Suggested RAM</th><th>Notes</th></tr>
+    <tr><td><code>qwen2.5:3b</code></td><td>~2 GB</td><td>8 GB</td><td><b>Default.</b> Fast, good tool calling.</td></tr>
+    <tr><td><code>qwen3:4b</code></td><td>~2.6 GB</td><td>8–16 GB</td><td>Reasons better, a bit slower.</td></tr>
+    <tr><td><code>gpt-oss:20b</code></td><td>~13 GB</td><td>16 GB+</td><td>The most capable on this list.</td></tr>
+    <tr><td><code>llama3.2:3b</code></td><td>~2 GB</td><td>8 GB</td><td>Lightweight alternative.</td></tr>
   </table>
 
-  <h3>2.3 Probarlo como un ChatGPT local</h3>
-  <p>Para chatear directo en la terminal (sin nada de R todavía):</p>
+  <h3>2.3 Try it as a local ChatGPT</h3>
+  <p>To chat directly in the terminal (no R yet):</p>
   <pre><code>ollama run qwen2.5:3b</code></pre>
-  <p>Escribe tu pregunta y listo. Escribe <code>/bye</code> para salir. Esto solo
-     es para que veas el modelo vivo; el agente de verdad lo armamos abajo.</p>
+  <p>Type your question and that's it. Type <code>/bye</code> to exit. This is just so you
+     see the model alive; we build the real agent below.</p>
 
   <div class="note">
-    <b>Nota:</b> la primera vez que usas un modelo, Ollama lo carga en memoria y la
-    primera respuesta tarda unos segundos. Las siguientes son rápidas.
+    <b>Note:</b> the first time you use a model, Ollama loads it into memory and the first
+    answer takes a few seconds. The following ones are fast.
   </div>
 
   <!-- 3 -->
-  <h2 id="harness"><span class="n">3</span>Correr el agente en R</h2>
-  <p>El agente vive en R usando el paquete <b>ellmer</b> (de Posit), que conecta R con
-     cualquier modelo: local (Ollama) o en la nube (Claude, etc.).</p>
+  <h2 id="harness"><span class="n">3</span>Running the agent in R</h2>
+  <p>The agent lives in R using the <b>ellmer</b> package (from Posit), which connects R
+     to any model: local (Ollama) or in the cloud (Claude, etc.).</p>
 
   <ol class="steps">
-    <li class="step"><b>Instala R</b> desde <a href="https://cran.r-project.org/">cran.r-project.org</a>
-      (opcional pero cómodo: <a href="https://posit.co/download/rstudio-desktop/">RStudio</a>).</li>
-    <li class="step"><b>Instala ellmer</b> en R:
+    <li class="step"><b>Install R</b> from <a href="https://cran.r-project.org/">cran.r-project.org</a>
+      (optional but handy: <a href="https://posit.co/download/rstudio-desktop/">RStudio</a>).</li>
+    <li class="step"><b>Install ellmer</b> in R:
       <pre style="margin:8px 0 0"><code>install.packages("ellmer")</code></pre></li>
-    <li class="step"><b>Descarga este repositorio</b> (botón verde <i>Code → Download ZIP</i> en GitHub,
-      o <code>git clone</code>) y descomprímelo.</li>
-    <li class="step"><b>Corre el agente completo.</b> En R/RStudio, dentro de la carpeta
-      <code>02-esqueleto-completo</code>:
-      <pre style="margin:8px 0 0"><code>source("agente.R")
-preguntar("Hazme la tabla 1 comparando por tratamiento, con valores p")
-preguntar("¿Qué variables se asocian con mayor mortalidad?")</code></pre>
+    <li class="step"><b>Download this repository</b> (green <i>Code → Download ZIP</i> button on GitHub,
+      or <code>git clone</code>) and unzip it.</li>
+    <li class="step"><b>Run the complete agent.</b> In R/RStudio, inside the
+      <code>02-complete-skeleton</code> folder:
+      <pre style="margin:8px 0 0"><code>source("agent.R")
+ask("Give me Table 1 comparing by treatment, with p-values")
+ask("Which variables are associated with higher mortality?")</code></pre>
     </li>
   </ol>
 
-  <p>También puedes correrlo como chat en la terminal:</p>
-  <pre><code>cd 02-esqueleto-completo
-Rscript agente.R</code></pre>
+  <p>You can also run it as a chat in the terminal:</p>
+  <pre><code>cd 02-complete-skeleton
+Rscript agent.R</code></pre>
 
-  <p>El agente cargará <code>cohorte.csv</code>, llamará a tus funciones de R
-     (<code>crear_tabla</code>, <code>ajustar_modelo</code>) y te interpretará el
-     resultado. La Tabla 1 queda guardada en <code>tabla.html</code>.</p>
+  <p>The agent loads <code>cohort.csv</code>, calls your R functions
+     (<code>make_table</code>, <code>fit_model</code>) and interprets the result.
+     Table 1 is saved to <code>table.html</code>.</p>
 
   <!-- 4 -->
-  <h2 id="personalizar"><span class="n">4</span>Personalizar tu propio agente</h2>
-  <p>Aquí está lo bueno: pasar del esqueleto vacío al que funciona es <b>solo llenar
-     dos archivos</b>. El motor (<code>agente.R</code>) no se toca.</p>
+  <h2 id="customise"><span class="n">4</span>Customising your own agent</h2>
+  <p>Here's the good part: going from the empty skeleton to the working one is <b>just
+     filling in two files</b>. The engine (<code>agent.R</code>) is not touched.</p>
 
-  <h3>El alma (<code>alma.md</code>)</h3>
-  <p>Quién es el agente y sus reglas. Es texto plano:</p>
-  <pre><code>Eres Rho, un asistente de análisis en R especializado en epidemiología.
-Tienes herramientas que ejecutan código R de verdad.
-Reglas:
- - Usa siempre tus herramientas; nunca inventes números.
- - Carga los datos antes de analizarlos.
- - Responde en español, claro y conciso.</code></pre>
+  <h3>The soul (<code>soul.md</code>)</h3>
+  <p>Who the agent is and its rules. Plain text:</p>
+  <pre><code>You are Rho, a data-analysis assistant in R specialised in epidemiology.
+You have tools that run real R code.
+Rules:
+ - Always use your tools; never invent numbers.
+ - Load the data before analysing it.
+ - Answer in English, clear and concise.</code></pre>
 
-  <h3>Las herramientas (<code>tools.R</code>)</h3>
-  <p>Cada herramienta es una función de R + una descripción para el modelo. Ejemplo
-     real de este repo (tabla con <code>gtsummary</code> e instalación automática):</p>
-  <pre><code>crear_tabla &lt;- function(comparar_por = NULL) {
+  <h3>The tools (<code>tools.R</code>)</h3>
+  <p>Each tool is an R function + a description for the model. Real example from this repo
+     (a table with <code>gtsummary</code> and automatic installation):</p>
+  <pre><code>make_table &lt;- function(compare_by = NULL) {
   if (!requireNamespace("gtsummary", quietly = TRUE))
-    install.packages("gtsummary")          # se instala sola si falta
+    install.packages("gtsummary")          # installs itself if missing
   library(gtsummary)
-  datos &lt;- obtener_datos()
-  if (is.null(comparar_por)) tbl &lt;- tbl_summary(datos)
-  else tbl &lt;- tbl_summary(datos, by = all_of(comparar_por)) |&gt; add_p()  # tabla comparativa + p
+  data &lt;- get_data()
+  if (is.null(compare_by)) tbl &lt;- tbl_summary(data)
+  else tbl &lt;- tbl_summary(data, by = all_of(compare_by)) |&gt; add_p()  # comparative table + p
   tbl |&gt; as_tibble() |&gt; knitr::kable() |&gt; paste(collapse = "\n")
 }
 
-tool_tabla &lt;- tool(
-  crear_tabla,
-  "Crea una Tabla 1 con gtsummary. Si se indica comparar_por, agrega valores p.",
+tool_table &lt;- tool(
+  make_table,
+  "Creates a Table 1 with gtsummary. If compare_by is given, adds p-values.",
   arguments = list(
-    comparar_por = type_string("Variable de grupo (p.ej. 'tratamiento').", required = FALSE)
+    compare_by = type_string("Grouping variable (e.g. 'treatment').", required = FALSE)
   )
 )</code></pre>
-  <p>Registras tus funciones en la lista <code>TOOLS</code> y el agente ya puede usarlas.
-     Así lo adaptas a <b>tus</b> librerías y <b>tu</b> flujo de trabajo.</p>
+  <p>You register your functions in the <code>TOOLS</code> list and the agent can use them.
+     That is how you adapt it to <b>your</b> libraries and <b>your</b> workflow.</p>
 
   <div class="note">
-    <b>Tip:</b> haz tus herramientas <b>robustas</b>. En este repo, si el agente olvida
-    cargar los datos, la herramienta los carga sola. Un modelo pequeño se equivoca más;
-    una tool a prueba de errores salva el día.
+    <b>Tip:</b> make your tools <b>robust</b>. In this repo, if the agent forgets to load
+    the data, the tool loads it itself. A small model makes more mistakes; a fail-safe tool
+    saves the day.
   </div>
 
   <!-- 5 -->
-  <h2 id="claude"><span class="n">5</span>Claude Code CLI: los superpoderes</h2>
-  <p>El harness casero enseña el concepto. Para trabajo real, un agente "de fábrica"
-     como <b>Claude Code</b> te da el loop, las herramientas (leer/escribir archivos,
-     correr comandos) y un modelo mucho más capaz, sin que programes nada.</p>
+  <h2 id="claude"><span class="n">5</span>Claude Code CLI: the superpowers</h2>
+  <p>The home-made harness teaches the concept. For real work, an off-the-shelf agent like
+     <b>Claude Code</b> gives you the loop, the tools (read/write files, run commands) and a
+     far more capable model, without programming anything.</p>
 
   <ol class="steps">
-    <li class="step"><b>Instálalo:</b>
-      <pre style="margin:8px 0 0"><code># opción nativa
+    <li class="step"><b>Install it:</b>
+      <pre style="margin:8px 0 0"><code># native option
 curl -fsSL https://claude.com/install.sh | bash
-# o con npm
+# or with npm
 npm install -g @anthropic-ai/claude-code</code></pre></li>
-    <li class="step"><b>Entra a la carpeta</b> <code>03-claude-code</code> y ejecuta <code>claude</code>.</li>
-    <li class="step"><b>Pídele lo mismo:</b> "Hazme la tabla 1 comparando por tratamiento, con valores p."</li>
+    <li class="step"><b>Enter the</b> <code>03-claude-code</code> folder and run <code>claude</code>.</li>
+    <li class="step"><b>Ask the same thing:</b> "Give me Table 1 comparing by treatment, with p-values."</li>
   </ol>
 
-  <p>Verás el <b>mismo esqueleto</b>, con otro vestido:</p>
+  <p>You'll see the <b>same skeleton</b>, in different clothes:</p>
   <table>
-    <tr><th>Harness casero (carpetas 01–02)</th><th>Claude Code (carpeta 03)</th></tr>
-    <tr><td><code>alma.md</code></td><td><code>CLAUDE.md</code></td></tr>
-    <tr><td><code>tools.R</code></td><td><code>.claude/skills/</code> + tools nativas</td></tr>
-    <tr><td><code>agente.R</code> (el loop)</td><td>viene incluido</td></tr>
-    <tr><td>modelo local</td><td>Claude (nube)</td></tr>
+    <tr><th>Home-made harness (folders 01–02)</th><th>Claude Code (folder 03)</th></tr>
+    <tr><td><code>soul.md</code></td><td><code>CLAUDE.md</code></td></tr>
+    <tr><td><code>tools.R</code></td><td><code>.claude/skills/</code> + native tools</td></tr>
+    <tr><td><code>agent.R</code> (the loop)</td><td>included</td></tr>
+    <tr><td>local model</td><td>Claude (cloud)</td></tr>
   </table>
-  <p class="muted">El concepto es idéntico. Cambia el pulido y la fiabilidad.</p>
+  <p class="muted">The concept is identical. What changes is the polish and the reliability.</p>
 
   <!-- 6 -->
-  <h2 id="otras"><span class="n">6</span>Otras herramientas</h2>
+  <h2 id="others"><span class="n">6</span>Other tools</h2>
   <div class="card">
     <h3 style="margin-top:0">Antigravity <span class="pill">Google</span></h3>
-    <p>Un IDE agéntico construido alrededor de los modelos Gemini: el agente planifica,
-       escribe y ejecuta código, y tú supervisas. Es la apuesta de Google en la misma
-       dirección que Claude Code. <a href="https://antigravity.google/">antigravity.google</a></p>
+    <p>An agentic IDE built around the Gemini models: the agent plans, writes and runs
+       code, and you supervise. It is Google's bet in the same direction as Claude Code.
+       <a href="https://antigravity.google/">antigravity.google</a></p>
   </div>
   <div class="card">
-    <h3 style="margin-top:0">Visual Studio Code + extensiones</h3>
-    <p>Si prefieres un editor gráfico, puedes meter el agente dentro de VS Code:</p>
+    <h3 style="margin-top:0">Visual Studio Code + extensions</h3>
+    <p>If you prefer a graphical editor, you can put the agent inside VS Code:</p>
     <ul>
-      <li><b>Cline</b> y <b>Continue</b>: agentes open-source que funcionan con modelos
-          <b>locales (Ollama)</b> o en la nube, directo en el editor.</li>
-      <li><b>GitHub Copilot</b>: el asistente integrado de Microsoft.</li>
+      <li><b>Cline</b> and <b>Continue</b>: open-source agents that work with
+          <b>local models (Ollama)</b> or cloud models, right in the editor.</li>
+      <li><b>GitHub Copilot</b>: Microsoft's built-in assistant.</li>
     </ul>
-    <p class="muted">Todos son variaciones de lo mismo: modelo + herramientas + loop, dentro del editor.</p>
+    <p class="muted">They are all variations on the same thing: model + tools + loop, inside the editor.</p>
   </div>
 
   <!-- 7 -->
-  <h2 id="local-vs-nube"><span class="n">7</span>Local vs. nube: cuándo usar cuál</h2>
+  <h2 id="local-vs-cloud"><span class="n">7</span>Local vs. cloud: when to use which</h2>
   <table>
-    <tr><th></th><th>Modelo local (Ollama)</th><th>Nube (Claude Code)</th></tr>
-    <tr><td><b>Privacidad</b></td><td>Total: nada sale de tu PC</td><td>Los datos van a un servidor</td></tr>
-    <tr><td><b>Costo</b></td><td>Gratis</td><td>De pago / con límites</td></tr>
-    <tr><td><b>Internet</b></td><td>No requiere</td><td>Requiere</td></tr>
-    <tr><td><b>Capacidad</b></td><td>Buena en tareas cortas (1–2 pasos)</td><td>Muy alta, tareas largas</td></tr>
-    <tr><td><b>Ideal para</b></td><td>Datos sensibles, aprender, offline</td><td>Trabajo complejo y reproducible</td></tr>
+    <tr><th></th><th>Local model (Ollama)</th><th>Cloud (Claude Code)</th></tr>
+    <tr><td><b>Privacy</b></td><td>Total: nothing leaves your PC</td><td>Data goes to a server</td></tr>
+    <tr><td><b>Cost</b></td><td>Free</td><td>Paid / with limits</td></tr>
+    <tr><td><b>Internet</b></td><td>Not required</td><td>Required</td></tr>
+    <tr><td><b>Capability</b></td><td>Good on short tasks (1–2 steps)</td><td>Very high, long tasks</td></tr>
+    <tr><td><b>Best for</b></td><td>Sensitive data, learning, offline</td><td>Complex, reproducible work</td></tr>
   </table>
-  <p>La buena noticia: es el <b>mismo esqueleto</b>. Empiezas local para aprender y por
-     privacidad, y cambias a la nube cuando necesitas más potencia — a veces con solo
-     cambiar una línea.</p>
+  <p>The good news: it's the <b>same skeleton</b>. You start local to learn and for privacy,
+     and switch to the cloud when you need more power — sometimes by changing a single line.</p>
 
   <footer>
-    Taller <b>Agentic R</b> · R Users Group · preparado por David Rebellón Sánchez.<br>
-    Código y datos de ejemplo en el repositorio que acompaña este tutorial.
+    <b>Agentic R</b> workshop · R Users Group · prepared by David Rebellón Sánchez.<br>
+    Code and example data in the repository that accompanies this tutorial.
   </footer>
 
 </div>

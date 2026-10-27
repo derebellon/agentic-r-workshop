@@ -1,97 +1,96 @@
-# Agentic R — esqueleto mínimo de un agente para análisis en R
+# Agentic R — a minimal skeleton of an agent for analysis in R
 
-Material del taller **"Agentic R: using agentic systems to efficiently write, review
-and produce reproducible code"** (R Users Group).
+Material for the workshop **"Agentic R: using agentic systems to efficiently write,
+review and produce reproducible code"** (R Users Group).
 
-La idea es simple: un **agente** no es magia, son **tres piezas**.
+The idea is simple: an **agent** is not magic. It is **three pieces**.
 
 ```
-AGENTE = MODELO (un LLM)  +  HERRAMIENTAS (funciones tuyas)  +  un LOOP
+AGENT = MODEL (an LLM)  +  TOOLS (your functions)  +  a LOOP
 ```
 
-Este repo te da ese esqueleto, listo para correr en tu laptop (incluso **sin
-internet**, con un modelo **local**), y te enseña a personalizarlo con las
-librerías de R que tú quieras.
+This repo gives you that skeleton, ready to run on your laptop (even **offline**,
+with a **local** model), and teaches you to customise it with the R libraries you want.
 
 ---
 
-## Qué hay aquí
+## What's here
 
-| Carpeta | Qué es |
+| Folder | What it is |
 |---|---|
-| **`data/`** | Una cohorte sintética reproducible (`cohorte.csv`, 400 pacientes) y el script que la crea. |
-| **`01-esqueleto-minimo/`** | El agente más pequeño que corre: loop + alma (plantilla) + 1 tool de ejemplo. Para entender las piezas. |
-| **`02-esqueleto-completo/`** | El mismo agente, ya lleno: habla con tus datos, hace una Tabla 1 con `gtsummary` y ajusta una regresión logística. |
-| **`03-claude-code/`** | El MISMO agente, pero corriendo en Claude Code CLI. Para comparar local vs. nube. |
-| **`docs/tutorial.html`** | Tutorial paso a paso: instalar Ollama, correr modelos locales, y usar todo esto. **Ábrelo en tu navegador.** |
+| **`data/`** | A reproducible synthetic cohort (`cohort.csv`, 400 patients) and the script that builds it. |
+| **`01-minimal-skeleton/`** | The smallest agent that runs: loop + soul (template) + 1 example tool. To understand the pieces. |
+| **`02-complete-skeleton/`** | The same agent, filled in: it talks to your data, builds a Table 1 with `gtsummary` and fits a logistic regression. |
+| **`03-claude-code/`** | The SAME agent, running in Claude Code CLI. To compare local vs. cloud. |
+| **`docs/tutorial.html`** | Step-by-step tutorial: install Ollama, run local models, and use all of this. **Open it in your browser.** |
 
 ---
 
-## Arranque rápido (modelo local, gratis y privado)
+## Quick start (local model, free and private)
 
-**1. Instala las piezas** (detalle en `docs/tutorial.html`):
-- [R](https://cran.r-project.org/) y, si quieres, [RStudio](https://posit.co/download/rstudio-desktop/).
-- El paquete `ellmer`:  `install.packages("ellmer")`
-- [Ollama](https://ollama.com/download) (para correr modelos locales).
+**1. Install the pieces** (details in `docs/tutorial.html`):
+- [R](https://cran.r-project.org/) and, if you like, [RStudio](https://posit.co/download/rstudio-desktop/).
+- The `ellmer` package:  `install.packages("ellmer")`
+- [Ollama](https://ollama.com/download) (to run local models).
 
-**2. Descarga un modelo local:**
+**2. Download a local model:**
 ```bash
-ollama pull qwen2.5:3b     # ligero y rápido, corre en casi cualquier laptop
+ollama pull qwen2.5:3b     # light and fast, runs on almost any laptop
 ```
 
-**3. Corre el agente:**
+**3. Run the agent:**
 ```r
-# dentro de R / RStudio, en la carpeta 02-esqueleto-completo
-source("agente.R")
-preguntar("Hazme la tabla 1 comparando por tratamiento, con valores p")
-preguntar("¿Qué variables se asocian con mayor mortalidad?")
+# inside R / RStudio, in the 02-complete-skeleton folder
+source("agent.R")
+ask("Give me Table 1 comparing by treatment, with p-values")
+ask("Which variables are associated with higher mortality?")
 ```
 
-Eso es todo. El agente carga los datos, llama a tus funciones de R, y te
-interpreta el resultado.
+That's it. The agent loads the data, calls your R functions, and interprets the result.
 
 ---
 
-## El dataset (y la "respuesta correcta")
+## The dataset (and the "right answer")
 
-`data/cohorte.csv` es **sintético y reproducible** (semilla fija). Tiene asociaciones
-incrustadas a propósito, para que el agente "descubra" lo que ya sabemos que es verdad:
+`data/cohort.csv` is **synthetic and reproducible** (fixed seed). It has associations
+baked in on purpose, so the agent "discovers" what we already know to be true:
 
-- **Comorbilidades** → mayor mortalidad (OR ≈ 3.8)
-- **Tratamiento 1** → menor mortalidad (OR ≈ 0.26)
-- **Tratamiento 2** → mayor mortalidad (OR ≈ 2.0)
-- **Edad** → mayor mortalidad (OR ≈ 1.05 por año)
-- **Sexo** → sin efecto real
+- **Comorbidities** → higher mortality (OR ≈ 3.8)
+- **Treatment 1** → lower mortality (OR ≈ 0.26)
+- **Treatment 2** → higher mortality (OR ≈ 2.0)
+- **Age** → higher mortality (OR ≈ 1.05 per year)
+- **Sex** → no real effect
 
-Para regenerarlo:  `cd data && Rscript generar_datos.R`
+To regenerate it:  `cd data && Rscript generate_data.R`
 
 ---
 
-## Modelos locales (elige según tu laptop)
+## Local models (pick one for your laptop)
 
-| Modelo | Tamaño | Para qué |
+| Model | Size | For what |
 |---|---|---|
-| `qwen2.5:3b` | ~2 GB | **Default.** Rápido, buen tool calling, casi cualquier PC. |
-| `qwen3:4b` | ~2.6 GB | Razona mejor, un poco más lento. |
-| `gpt-oss:20b` | ~13 GB | El más capaz. Necesita ~16 GB de RAM. |
+| `qwen2.5:3b` | ~2 GB | **Default.** Fast, good tool calling, almost any PC. |
+| `qwen3:4b` | ~2.6 GB | Reasons better, a bit slower. |
+| `gpt-oss:20b` | ~13 GB | The most capable. Needs ~16 GB RAM. |
 
-Cambia el modelo con una variable, sin tocar el código:
+Switch the model with a variable, without touching the code:
 ```bash
-AGENTE_MODELO=qwen3:4b Rscript agente.R
+AGENT_MODEL=qwen3:4b Rscript agent.R
 ```
 
 ---
 
-## Personalizar tu propio agente
+## Customise your own agent
 
-Pasar del esqueleto vacío (`01`) al que funciona (`02`) es **solo llenar dos archivos**:
+Going from the empty skeleton (`01`) to the working one (`02`) is **just filling in
+two files**:
 
-- **`alma.md`** → quién es el agente y sus reglas (el *system prompt*).
-- **`tools.R`** → las funciones de R que puede ejecutar (tus librerías, tu flujo).
+- **`soul.md`** → who the agent is and its rules (the *system prompt*).
+- **`tools.R`** → the R functions it can run (your libraries, your workflow).
 
-El motor (`agente.R`) **no cambia**. Ese es el punto: una vez tienes el harness,
-personalizar un agente es describir quién es y darle herramientas.
+The engine (`agent.R`) **does not change**. That is the point: once you have the
+harness, customising an agent is describing who it is and giving it tools.
 
 ---
 
-*Taller preparado por David Rebellón Sánchez.*
+*Workshop prepared by David Rebellón Sánchez.*

@@ -1,42 +1,42 @@
-# 03 - El mismo agente en Claude Code CLI
+# 03 - The same agent in Claude Code CLI
 
-Aqui el agente **Rho** corre dentro de **Claude Code** (el CLI de Anthropic),
-no en el harness casero. Mismo concepto, pero el loop, las tools y un modelo
-mucho mas capaz vienen "de fabrica".
+Here the **Rho** agent runs inside **Claude Code** (Anthropic's CLI), not in the
+home-made harness. Same concept, but the loop, the tools and a far more capable
+model come "out of the box".
 
 ```
-CLAUDE.md                         <- el "alma" (system prompt del proyecto)
-.claude/skills/crear-tabla/       <- una "skill" = una tool documentada
-data/cohorte.csv                  <- los mismos datos
+CLAUDE.md                         <- the "soul" (project system prompt)
+.claude/skills/make-table/        <- a "skill" = a documented tool
+data/cohort.csv                   <- the same data
 ```
 
-## Mapeo con el harness casero
+## Mapping to the home-made harness
 
 | Harness (01-02)        | Claude Code (03)                         |
 |------------------------|------------------------------------------|
-| `alma.md`              | `CLAUDE.md`                              |
-| `tools.R`              | `.claude/skills/` + Bash/Read/Write nativas |
-| `agente.R` (el loop)   | lo trae Claude Code                      |
-| modelo local           | Claude (nube)                            |
+| `soul.md`              | `CLAUDE.md`                              |
+| `tools.R`              | `.claude/skills/` + native Bash/Read/Write |
+| `agent.R` (the loop)   | shipped with Claude Code                 |
+| local model            | Claude (cloud)                           |
 
-## Correr
+## Run it
 
-Requisitos: [Claude Code](https://claude.com/claude-code) instalado y con sesion
-iniciada, y R disponible.
+Requirements: [Claude Code](https://claude.com/claude-code) installed and signed in,
+and R available.
 
 ```bash
 cd 03-claude-code
 claude
 ```
 
-Y pidele, por ejemplo:
-- "Hazme la tabla 1 comparando por tratamiento, con valores p."
-- "Que variables se asocian con mayor mortalidad? Ajusta una regresion logistica."
+Then ask, for example:
+- "Give me Table 1 comparing by treatment, with p-values."
+- "Which variables are associated with higher mortality? Fit a logistic regression."
 
-Claude Code leera `CLAUDE.md`, usara la skill `crear-tabla`, escribira un script
-R reproducible en `R/`, lo correra y te mostrara (e interpretara) el resultado.
+Claude Code will read `CLAUDE.md`, use the `make-table` skill, write a reproducible
+R script in `R/`, run it, and show you (and interpret) the result.
 
-## Por que se siente mas potente
-Claude lee tu repo, escribe y ejecuta codigo, se corrige solo si algo falla, y
-encadena varios pasos sin que tengas que programar el loop. Eso es lo que, con
-mucho mas esfuerzo, replicamos en pequeno con el harness local de las carpetas 01-02.
+## Why it feels more powerful
+Claude reads your repo, writes and runs code, fixes itself if something fails, and
+chains several steps without you programming the loop. That is what, with much more
+effort, we reproduce in miniature with the local harness in folders 01-02.
