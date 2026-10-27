@@ -36,7 +36,10 @@ if (length(need)) {
 
 # --- 2. Ollama (runs AI models locally, free) ---------------
 if (!have("ollama")) {
-  cat("[2/4] Ollama not found. Installing it (downloading, please wait)...\n")
+  cat("[2/4] Ollama not found. Installing it...\n")
+  cat("      IMPORTANT: on Windows this can make the screen look FROZEN for 5-10 minutes\n")
+  cat("      while Ollama installs in the background. It is NOT stuck. Please wait and do\n")
+  cat("      not close RStudio. It will continue by itself when it finishes.\n")
   flush.console()
   tryCatch({
     if (os == "Windows") {

@@ -94,8 +94,11 @@ picks the right commands itself (so you don't need to know PowerShell vs bash).
 
 - It should **not** ask you questions. The one exception: if Ollama wasn't installed yet, its
   installer may ask for your computer's **admin password** (that's normal, it's installing an app).
-- On Windows, if it says Ollama isn't visible yet, do **Session → Restart R** and run
-  `source("setup.R")` again (it may need two runs the first time).
+- **On Windows, installing Ollama can make RStudio look FROZEN for 5-10 minutes** while it
+  installs in the background. This is normal, it is **not** stuck. Don't close RStudio, it
+  continues on its own when it finishes.
+- On Windows, if the check then says Ollama isn't visible yet, do **Session → Restart R** and
+  run `source("setup.R")` again (it may need two runs the first time).
 
 When the final check shows everything `OK`, jump to **section 5** and run the agent.
 
