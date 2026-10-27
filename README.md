@@ -110,8 +110,13 @@ bash).
 
 When the check shows everything `OK`, jump to **section 4**.
 
+That one command should install everything on the first try. **But if the final check does
+_not_ show all `OK`** (something is marked `MISSING` or `not downloaded`), open the manual steps
+below and run **only the piece that failed** — you don't need to redo the ones that already
+worked.
+
 <details>
-<summary><b>Or do it manually, step by step</b></summary>
+<summary><b>Manual install — run only the step that failed</b></summary>
 
 **3a. Install the `ellmer` package — in R.**
 Open **RStudio**. In the **R console** (the pane with `>`), type this and press Enter:
