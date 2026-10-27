@@ -518,33 +518,39 @@
   <div class="kick gold">How we got here</div>
   <h2 class="serif">From autocomplete to coding agents</h2>
   <p style="font-size:15px;margin-bottom:6px;">Help with writing code has climbed the same ladder, from guessing the next word to running whole analyses for you.</p>
-  <div style="display:grid;grid-template-columns:1fr 26px 1fr 26px 1fr 26px 1fr;align-items:stretch;margin-top:12px;">
-    <!-- 1 -->
-    <div style="border:1px solid var(--line);border-radius:16px;padding:16px 15px;background:#fbfdff;display:flex;flex-direction:column;">
-      <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9aabbe;">~2000s</div>
-      <h4 style="font-size:16px;color:var(--navy);margin:5px 0 7px;">Autocomplete</h4>
-      <p style="font-size:12.5px;color:var(--mut);line-height:1.42;margin:0;">The editor suggests the next token or function name. RStudio completion, IntelliSense. It guesses; it does not understand.</p>
-    </div>
-    <div class="glarrow">&rarr;</div>
-    <!-- 2 -->
-    <div style="border:1px solid var(--line);border-radius:16px;padding:16px 15px;background:#fbfdff;display:flex;flex-direction:column;">
-      <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9aabbe;">2021&ndash;2023</div>
-      <h4 style="font-size:16px;color:var(--navy);margin:5px 0 7px;">LLMs generate code</h4>
-      <p style="font-size:12.5px;color:var(--mut);line-height:1.42;margin:0;">Copilot, ChatGPT. You describe it in words and get a function or a whole script. But it lives outside R, in a chat window.</p>
-    </div>
-    <div class="glarrow">&rarr;</div>
-    <!-- 3 -->
-    <div style="border:1px solid #cfe8da;border-radius:16px;padding:16px 15px;background:linear-gradient(160deg,#eefaf2,#f5fbf8);display:flex;flex-direction:column;">
-      <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);">2024&ndash;2025</div>
-      <h4 style="font-size:16px;color:var(--navy);margin:5px 0 7px;">LLMs inside R</h4>
-      <p style="font-size:12.5px;color:var(--mut);line-height:1.42;margin:0;">Packages like <b>ellmer</b> (Posit) let you chat with any model <b>from R</b> and give it <b>tool calling</b>, so it runs your own R functions.</p>
-    </div>
-    <div class="glarrow">&rarr;</div>
-    <!-- 4 -->
-    <div style="border:1px solid #eeddc0;border-radius:16px;padding:16px 15px;background:linear-gradient(160deg,#fdf6ea,#fcf9f2);display:flex;flex-direction:column;">
-      <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);">2025 &rarr;</div>
-      <h4 style="font-size:16px;color:var(--navy);margin:5px 0 7px;">Agentic systems</h4>
-      <p style="font-size:12.5px;color:var(--mut);line-height:1.42;margin:0;">Claude Code and friends: agents that plan, run code, read the error, fix themselves and verify, a reproducible analysis end to end.</p>
+  <div style="position:relative;margin-top:40px;">
+    <!-- connecting line + arrowhead -->
+    <div style="position:absolute;top:43px;left:12.5%;right:11%;height:3px;background:linear-gradient(90deg,#9aabbe,#1f6b76 38%,#2e7d5b 64%,#c9a227);border-radius:2px;z-index:0;"></div>
+    <div style="position:absolute;top:38px;right:9.8%;width:0;height:0;border-left:12px solid #c9a227;border-top:7px solid transparent;border-bottom:7px solid transparent;z-index:0;"></div>
+    <div style="display:flex;position:relative;z-index:1;align-items:flex-start;">
+      <!-- 1 -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 16px;">
+        <div style="font-family:Georgia,serif;font-size:17px;font-weight:700;color:#5b6b82;margin-bottom:11px;">~2000s</div>
+        <div style="width:18px;height:18px;border-radius:50%;background:#5b6b82;border:4px solid #fff;box-shadow:0 0 0 2px #cdd6e2,0 5px 11px rgba(11,30,59,.20);margin-bottom:20px;"></div>
+        <div style="font-family:Georgia,serif;font-size:16.5px;font-weight:700;color:var(--navy);margin-bottom:7px;">Autocomplete</div>
+        <p style="font-size:12.5px;color:var(--mut);line-height:1.46;margin:0;">The editor suggests the next token or function name, RStudio completion, IntelliSense. It guesses; it does not understand.</p>
+      </div>
+      <!-- 2 -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 16px;">
+        <div style="font-family:Georgia,serif;font-size:17px;font-weight:700;color:#1f6b76;margin-bottom:11px;">2021&ndash;2023</div>
+        <div style="width:18px;height:18px;border-radius:50%;background:#1f6b76;border:4px solid #fff;box-shadow:0 0 0 2px #bfe0e3,0 5px 11px rgba(11,30,59,.20);margin-bottom:20px;"></div>
+        <div style="font-family:Georgia,serif;font-size:16.5px;font-weight:700;color:var(--navy);margin-bottom:7px;">LLMs generate code</div>
+        <p style="font-size:12.5px;color:var(--mut);line-height:1.46;margin:0;">Copilot, ChatGPT. You describe it in words and get a function or a whole script, but it lives outside R, in a chat window.</p>
+      </div>
+      <!-- 3 -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 16px;">
+        <div style="font-family:Georgia,serif;font-size:17px;font-weight:700;color:#2e7d5b;margin-bottom:11px;">2024&ndash;2025</div>
+        <div style="width:18px;height:18px;border-radius:50%;background:#2e7d5b;border:4px solid #fff;box-shadow:0 0 0 2px #bfe3cd,0 5px 11px rgba(11,30,59,.20);margin-bottom:20px;"></div>
+        <div style="font-family:Georgia,serif;font-size:16.5px;font-weight:700;color:var(--navy);margin-bottom:7px;">LLMs inside R</div>
+        <p style="font-size:12.5px;color:var(--mut);line-height:1.46;margin:0;">Packages like <b>ellmer</b> (Posit) let you chat with any model <b>from R</b> and give it <b>tool calling</b>, so it runs your own R functions.</p>
+      </div>
+      <!-- 4 -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 16px;">
+        <div style="font-family:Georgia,serif;font-size:17px;font-weight:700;color:#b78f1f;margin-bottom:11px;">2025 &rarr;</div>
+        <div style="width:18px;height:18px;border-radius:50%;background:#c9a227;border:4px solid #fff;box-shadow:0 0 0 2px #ecdca0,0 5px 11px rgba(11,30,59,.20);margin-bottom:20px;"></div>
+        <div style="font-family:Georgia,serif;font-size:16.5px;font-weight:700;color:var(--navy);margin-bottom:7px;">Agentic systems</div>
+        <p style="font-size:12.5px;color:var(--mut);line-height:1.46;margin:0;">Claude Code and friends: agents that plan, run code, read the error, fix themselves and verify, a reproducible analysis end to end.</p>
+      </div>
     </div>
   </div>
   <div class="note" style="margin-top:16px;">The jump that matters for us: the model stops being a chat on the side and starts <b>acting inside your R session</b>, with your data and your functions.</div>
