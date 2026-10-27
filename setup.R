@@ -12,14 +12,21 @@
 #    not need to know PowerShell vs bash.)
 # ============================================================
 
+# Use pre-built binaries and NEVER pause to ask about compiling from source
+# (compiling would need extra tools like Rtools on Windows, and isn't necessary).
+options(install.packages.compile.from.source = "never")
+
 cat("\n================ Agentic R setup ================\n\n")
+flush.console()
 
 os <- Sys.info()[["sysname"]]          # "Windows", "Darwin" (Mac), or "Linux"
 have <- function(cmd) nzchar(Sys.which(cmd))   # is a program on the PATH?
 
 # --- 1. ellmer (the R package that talks to AI models) ------
 if (!requireNamespace("ellmer", quietly = TRUE)) {
-  cat("[1/4] Installing the 'ellmer' R package...\n")
+  cat("[1/4] Installing the 'ellmer' R package and its dependencies...\n")
+  cat("      This downloads several packages and can take 2-5 minutes. Please wait.\n")
+  flush.console()
   install.packages("ellmer", repos = "https://cloud.r-project.org")
 } else {
   cat("[1/4] ellmer R package: already installed.\n")
@@ -27,7 +34,8 @@ if (!requireNamespace("ellmer", quietly = TRUE)) {
 
 # --- 2. Ollama (runs AI models locally, free) ---------------
 if (!have("ollama")) {
-  cat("[2/4] Ollama not found. Installing it...\n")
+  cat("[2/4] Ollama not found. Installing it (downloading, please wait)...\n")
+  flush.console()
   tryCatch({
     if (os == "Windows") {
       system('powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://ollama.com/install.ps1 | iex"')
@@ -51,7 +59,9 @@ if (!have("ollama")) {
 
 # --- 3. Download the model (first time only, ~2 GB) ---------
 if (have("ollama")) {
-  cat("[3/4] Downloading the model qwen2.5:3b (first time only, be patient)...\n")
+  cat("[3/4] Downloading the model qwen2.5:3b (~2 GB, first time only).\n")
+  cat("      This can take several minutes. You'll see download progress below. Please wait.\n")
+  flush.console()
   system("ollama pull qwen2.5:3b")
 } else {
   cat("[3/4] Skipping the model download until Ollama is available.\n")
@@ -63,7 +73,8 @@ INSTALL_CLAUDE <- TRUE
 if (have("claude")) {
   cat("[4/4] Claude Code: already installed.\n")
 } else if (INSTALL_CLAUDE) {
-  cat("[4/4] Installing Claude Code...\n")
+  cat("[4/4] Installing Claude Code (downloading, please wait)...\n")
+  flush.console()
   tryCatch({
     if (os == "Windows") {
       system('powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://claude.ai/install.ps1 | iex"')
