@@ -23,13 +23,15 @@ os <- Sys.info()[["sysname"]]          # "Windows", "Darwin" (Mac), or "Linux"
 have <- function(cmd) nzchar(Sys.which(cmd))   # is a program on the PATH?
 
 # --- 1. ellmer (the R package that talks to AI models) ------
-if (!requireNamespace("ellmer", quietly = TRUE)) {
-  cat("[1/4] Installing the 'ellmer' R package and its dependencies...\n")
-  cat("      This downloads several packages and can take 2-5 minutes. Please wait.\n")
+pkgs <- c("ellmer", "gtsummary", "gt", "ggplot2")   # the agent + what its tools use
+need <- pkgs[!vapply(pkgs, requireNamespace, logical(1), quietly = TRUE)]
+if (length(need)) {
+  cat("[1/4] Installing R packages:", paste(need, collapse = ", "), "...\n")
+  cat("      This downloads several packages and can take a few minutes. Please wait.\n")
   flush.console()
-  install.packages("ellmer", repos = "https://cloud.r-project.org")
+  install.packages(need, repos = "https://cloud.r-project.org")
 } else {
-  cat("[1/4] ellmer R package: already installed.\n")
+  cat("[1/4] R packages (ellmer, gtsummary, gt, ggplot2): already installed.\n")
 }
 
 # --- 2. Ollama (runs AI models locally, free) ---------------
@@ -101,11 +103,12 @@ if (have("claude")) {
 
 # --- Final check --------------------------------------------
 cat("\n==================== Check ======================\n")
-ok_ellmer <- requireNamespace("ellmer", quietly = TRUE)
+ok_ellmer <- all(vapply(c("ellmer", "gtsummary", "gt", "ggplot2"),
+                        requireNamespace, logical(1), quietly = TRUE))
 ok_ollama <- have("ollama")
 ok_model  <- tryCatch(any(grepl("qwen2.5:3b", system("ollama list", intern = TRUE, ignore.stderr = TRUE))),
                       error = function(e) FALSE)
-cat(" ellmer R package :", if (ok_ellmer) "OK" else "MISSING", "\n")
+cat(" R packages       :", if (ok_ellmer) "OK (ellmer, gtsummary, gt, ggplot2)" else "MISSING", "\n")
 cat(" ollama installed :", if (ok_ollama) "OK" else "MISSING", "\n")
 cat(" model qwen2.5:3b :", if (isTRUE(ok_model)) "OK" else "not downloaded yet", "\n")
 cat(" claude (folder 03):", if (have("claude")) "OK" else "installed - restart RStudio if not found", "\n")

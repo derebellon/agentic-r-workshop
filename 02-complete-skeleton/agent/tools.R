@@ -20,6 +20,8 @@ library(ellmer)
 ensure_package <- function(pkg) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
     message("Installing package '", pkg, "' (it was not in your R session)...")
+    old <- options(install.packages.compile.from.source = "never")  # use binaries, don't ask
+    on.exit(options(old))
     install.packages(pkg, repos = "https://cloud.r-project.org")
   }
 }
